@@ -94,6 +94,9 @@
 
     <properties>
         <maven.findbugsplugin.version.exclude>findbugs-exclude.xml</maven.findbugsplugin.version.exclude>
+        <export.package>
+            org.wso2.carbon.database.query.manager;
+        </export.package>
     </properties>
 
 </project>

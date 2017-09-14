@@ -29,29 +29,24 @@ import java.util.Map;
  */
 public class QueryManager {
     private final String DB_QUERIES = "db_queries";
-    private final String DB_TYPE = "db_type";
+    private final String DB_TYPE = "type";
     private static final Logger LOGGER = LoggerFactory.getLogger(QueryManager.class);
-    private static QueryManager instance = new QueryManager();
-    private String componentNamespace = null;
-    private String databaseType = null;
+    private String componentNamespace;
+    private Map<String,String> queries = null;
+    private String databaseType;
 
-    private Map<String, String> queries;
-
-    private QueryManager() {
-        this.queries = readConfigs();
+    public QueryManager(String componentNamespace) {
+        this.queries = readConfigs(componentNamespace);
     }
 
-    public static QueryManager getInstance() {
-        return instance;
-    }
-
-    private Map<String, String> readConfigs() {
+    private Map<String, String> readConfigs(String componentNamespace) {
         // TODO: Get the relevant type of the database from the config provider.
         try {
             // TODO: 11/9/17 refine the namespace for stream processor
-            Map componentConfigs = DataHolder.getInstance().getConfigProvider().getConfigurationMap(componentNamespace);
+            Map componentConfigs = DataHolder.getInstance().getConfigProvider().getConfigurationMap
+                    (componentNamespace);
             if (null != componentConfigs) {
-                databaseType = (String) componentConfigs.get(DB_TYPE);
+                databaseType = (String) componentConfigs.get("type");
                 if (databaseType == null) {
                     throw new RuntimeException("Database type (db_type) has not been specified.");
                 }
@@ -77,20 +72,8 @@ public class QueryManager {
         return this.queries.get(key);
     }
 
-    public String getComponentNamespace() {
-        return componentNamespace;
-    }
-
-    public void setComponentNamespace(String componentNamespace) {
-        this.componentNamespace = componentNamespace;
-    }
-
     public String getDatabaseType() {
         return databaseType;
-    }
-
-    public void setDatabaseType(String databaseType) {
-        this.databaseType = databaseType;
     }
 }
 
