@@ -146,6 +146,11 @@
             <version>LATEST</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.wso2.carbon.analytics</groupId>
+            <artifactId>org.wso2.carbon.stream.processor.core</artifactId>
+        </dependency>
+
     </dependencies>
     <build>
         <plugins>
