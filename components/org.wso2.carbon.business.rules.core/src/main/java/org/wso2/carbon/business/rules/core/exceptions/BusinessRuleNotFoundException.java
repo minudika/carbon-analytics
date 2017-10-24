@@ -1,4 +1,4 @@
-package org.wso2.carbon.business.rules.core.exceptions;/*
+/*
  * Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
@@ -15,13 +15,18 @@ package org.wso2.carbon.business.rules.core.exceptions;/*
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.wso2.carbon.business.rules.core.exceptions;
 
-public class BusinessRuleDeploymentException extends Exception {
-    public BusinessRuleDeploymentException(String message) {
+/**
+ * Exceptions related to Business Rules
+ * **/
+public class BusinessRuleNotFoundException extends Exception {
+    public BusinessRuleNotFoundException(String message) {
         super(message);
     }
 
-    public BusinessRuleDeploymentException(String message, Throwable cause) {
+    public BusinessRuleNotFoundException(String message, Throwable cause) {
         super(message, cause);
     }
+
 }

@@ -48,14 +48,20 @@ public class TemplateManagerConstants {
     public static final String RULE_TEMPLATE_TYPE_TEMPLATE = "template";
     // Business Rule types
     public static final String BUSINESS_RULE_TYPE_TEMPLATE = "template";
-    // Instance count for Rule Templates
+
     public static final String INSTANCE_COUNT_ONE = "one";
     public static final String INSTANCE_COUNT_MANY = "many";
     public static final String BUSINESS_RULES = "business.rules";
+
     public static final int DEPLOYED = 0;
-    public static final int NOT_DEPLOYED = 1;
-    public static final int ERROR = 2;
-    public static final int FAILED_TO_SAVE = 3;
+    public static final int SAVED = 1;
+    public static final int PARTIALLY_DEPLOYED = 2;
+    public static final int PARTIALLY_UNDEPLOYED = 3;
+    public static final int DEPLOYMENT_FAILURE = 4;
+    public static final int ERROR = 5;
+
+    public static final int SUCCESSFULLY_DELETED = 6;
+
     // Directory locations
     private static final String CARBON_RUNTIME = Utils.getRuntimePath().toString();
     public static final String TEMPLATES_DIRECTORY = CARBON_RUNTIME + "/resources/businessRules/templates/";

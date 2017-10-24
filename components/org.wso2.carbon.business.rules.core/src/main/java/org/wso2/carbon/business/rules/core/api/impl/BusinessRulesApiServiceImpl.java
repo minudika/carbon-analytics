@@ -32,13 +32,13 @@ import org.wso2.carbon.business.rules.core.bean.TemplateGroup;
 import org.wso2.carbon.business.rules.core.bean.TemplateManagerInstance;
 import org.wso2.carbon.business.rules.core.bean.scratch.BusinessRuleFromScratch;
 import org.wso2.carbon.business.rules.core.bean.template.BusinessRuleFromTemplate;
-import org.wso2.carbon.business.rules.core.exceptions.BusinessRuleDeploymentException;
+import org.wso2.carbon.business.rules.core.exceptions.BusinessRuleNotFoundException;
+import org.wso2.carbon.business.rules.core.exceptions.SiddhiAppsApiHelperException;
 import org.wso2.carbon.business.rules.core.exceptions.TemplateManagerServiceException;
 import org.wso2.carbon.business.rules.core.services.TemplateManagerService;
 import org.wso2.carbon.business.rules.core.util.TemplateManagerConstants;
 import org.wso2.carbon.business.rules.core.util.TemplateManagerHelper;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -52,6 +52,7 @@ import javax.ws.rs.core.Response;
 public class BusinessRulesApiServiceImpl extends BusinessRulesApiService {
     private static final Logger log = LoggerFactory.getLogger(BusinessRulesApiServiceImpl.class);
 
+    // TODO: 24/10/17 Send a custom response message with custom error codes
     @Override
     public Response createBusinessRule(String businessRule, Boolean shouldDeploy
     ) throws NotFoundException {
@@ -89,25 +90,20 @@ public class BusinessRulesApiServiceImpl extends BusinessRulesApiService {
         }
         return Response.ok().status(status).build();
     }
-
+    
     @Override
     public Response deleteBusinessRule(String businessRuleInstanceID, Boolean forceDelete)
             throws NotFoundException {
         TemplateManagerService templateManagerService = TemplateManagerInstance.getInstance();
-        boolean deleted = false;
         try {
-            deleted = templateManagerService.deleteBusinessRule(businessRuleInstanceID, forceDelete);
-        } catch (BusinessRuleDeploymentException e) {
-            log.error("Failed to delete the business rule '" + businessRuleInstanceID + "' due to " +
-                    e.getMessage(), e);
-            return Response.serverError().build();
-        }
-        if (deleted) {
+            int status = templateManagerService.deleteBusinessRule(businessRuleInstanceID, forceDelete);
             return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK,
                     "Business Rule deleted " +
                             "successfully!")).build();
-        } else {
-            return Response.serverError().build();
+        } catch (BusinessRuleNotFoundException e) { // TODO: 25/10/17 LOG! 
+            return Response.status(Response.Status.NOT_FOUND).build();
+        } catch (TemplateManagerServiceException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }
 

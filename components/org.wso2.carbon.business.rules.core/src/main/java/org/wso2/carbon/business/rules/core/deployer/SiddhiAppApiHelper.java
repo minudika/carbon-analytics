@@ -32,7 +32,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.business.rules.core.deployer.api.SiddhiAppApiHelperService;
-import org.wso2.carbon.business.rules.core.exceptions.BusinessRuleDeploymentException;
+import org.wso2.carbon.business.rules.core.exceptions.SiddhiAppsApiHelperException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -60,8 +60,8 @@ public class SiddhiAppApiHelper implements SiddhiAppApiHelperService {
     }
 
     @Override
-    public boolean deploySiddhiApp(String nodeUrl, String siddhiApp) throws BusinessRuleDeploymentException {
-        URI uri = null;
+    public boolean deploySiddhiApp(String nodeUrl, String siddhiApp) throws SiddhiAppsApiHelperException {
+        URI uri;
         HttpResponse response;
         try {
             uri = new URIBuilder()
@@ -81,31 +81,31 @@ public class SiddhiAppApiHelper implements SiddhiAppApiHelperService {
                 case 201:
                     return true;
                 case 400:
-                    throw new BusinessRuleDeploymentException("A validation error occurred during " +
+                    throw new SiddhiAppsApiHelperException("A validation error occurred during " +
                             "saving the siddhi app '" + siddhiApp +
                             "' on the node '" + nodeUrl + "'");
 
                 case 409:
-                    throw new BusinessRuleDeploymentException("A Siddhi Application with " +
+                    throw new SiddhiAppsApiHelperException("A Siddhi Application with " +
                             "the given name already exists  " +
                             "in the node '" + nodeUrl + "'");
                 case 500:
-                    throw new BusinessRuleDeploymentException("Unexpected error occurred during " +
+                    throw new SiddhiAppsApiHelperException("Unexpected error occurred during " +
                             "saving the siddhi app '" + siddhiApp + "' " +
                             "on the node '" + nodeUrl + "'");
                 default:
-                    throw new BusinessRuleDeploymentException("Unexpected status code '" + status + "' received when " +
+                    throw new SiddhiAppsApiHelperException("Unexpected status code '" + status + "' received when " +
                             "trying to deploy the siddhi app '" + siddhiApp + "' on node '" + nodeUrl  + "'");
             }
 
         } catch (URISyntaxException | IOException e) {
-            throw new BusinessRuleDeploymentException("Failed to deploy siddhi app '" + siddhiApp + "' on the node '" +
+            throw new SiddhiAppsApiHelperException("Failed to deploy siddhi app '" + siddhiApp + "' on the node '" +
                     nodeUrl + "' due to " + e.getMessage(), e);
         }
     }
 
     @Override
-    public String getStatus(String nodeUrl, String siddhiAppName) throws BusinessRuleDeploymentException {
+    public String getStatus(String nodeUrl, String siddhiAppName) throws SiddhiAppsApiHelperException {
         URI uri;
         HttpResponse response;
         try {
@@ -136,21 +136,21 @@ public class SiddhiAppApiHelper implements SiddhiAppApiHelperService {
                     rd.close();
                     return statusMessage.getString(SiddhiAppApiConstants.STATUS);
                 case 404:
-                    throw new BusinessRuleDeploymentException("Specified siddhi app '" + siddhiAppName + "' " +
+                    throw new SiddhiAppsApiHelperException("Specified siddhi app '" + siddhiAppName + "' " +
                             "is not found on the node '" + nodeUrl +"'");
                 default:
-                    throw new BusinessRuleDeploymentException("Unexpected status code '" + status + "' received when " +
+                    throw new SiddhiAppsApiHelperException("Unexpected status code '" + status + "' received when " +
                             "requesting the status of siddhi app '" + siddhiAppName + "' from the node '" + nodeUrl +
                             "'");
             }
 
         } catch (URISyntaxException | IOException e) {
-            throw new BusinessRuleDeploymentException("URI generated for node url '" + nodeUrl + "' is invalid.", e);
+            throw new SiddhiAppsApiHelperException("URI generated for node url '" + nodeUrl + "' is invalid.", e);
         }
     }
 
     @Override
-    public boolean delete(String nodeUrl, String siddhiAppName) throws BusinessRuleDeploymentException {
+    public boolean delete(String nodeUrl, String siddhiAppName) throws SiddhiAppsApiHelperException {
         URI uri;
         HttpResponse response;
         try {
@@ -170,20 +170,20 @@ public class SiddhiAppApiHelper implements SiddhiAppApiHelperService {
                 case 200:
                     return true;
                 case 404:
-                    throw new BusinessRuleDeploymentException("Specified siddhi app '" + siddhiAppName +
+                    throw new SiddhiAppsApiHelperException("Specified siddhi app '" + siddhiAppName +
                             "' is not found on the node '" + nodeUrl + "'");
                 default:
-                    throw new BusinessRuleDeploymentException("Unexpected status code '" + status + "' received when " +
+                    throw new SiddhiAppsApiHelperException("Unexpected status code '" + status + "' received when " +
                             "trying to delete the siddhi app '" + siddhiAppName + "' from the node '" + nodeUrl + "'");
             }
         } catch (URISyntaxException | IOException e) {
-            throw new BusinessRuleDeploymentException("Failed to delete siddhi app '" + siddhiAppName +
+            throw new SiddhiAppsApiHelperException("Failed to delete siddhi app '" + siddhiAppName +
                     "' from the node '" + nodeUrl + "' due to " + e.getMessage(), e);
         }
     }
 
     @Override
-    public void update(String nodeUrl, String siddhiApp) throws BusinessRuleDeploymentException {
+    public void update(String nodeUrl, String siddhiApp) throws SiddhiAppsApiHelperException {
         URI uri;
         HttpResponse response;
         try {
@@ -202,16 +202,16 @@ public class SiddhiAppApiHelper implements SiddhiAppApiHelperService {
             int status = response.getStatusLine().getStatusCode();
             switch (status) {
                 case 400:
-                    throw new BusinessRuleDeploymentException("Failed to update the siddhi app '" + siddhiApp +
+                    throw new SiddhiAppsApiHelperException("Failed to update the siddhi app '" + siddhiApp +
                             "' on node '" + nodeUrl + "' due to a validation error occurred " +
                             "when updating the siddhi app");
                 case 500:
-                    throw new BusinessRuleDeploymentException("Failed to update the siddhi app '" + siddhiApp +
+                    throw new SiddhiAppsApiHelperException("Failed to update the siddhi app '" + siddhiApp +
                             "' on node '" + nodeUrl + "' due to an unexpected error occurred during updating the " +
                             "siddhi app");
             }
         } catch (URISyntaxException | IOException e) {
-            throw new BusinessRuleDeploymentException("Failed to update the siddhi app '" + siddhiApp + "' on node '"
+            throw new SiddhiAppsApiHelperException("Failed to update the siddhi app '" + siddhiApp + "' on node '"
                     + nodeUrl + "' due to " +  e.getMessage(), e);
         }
     }
