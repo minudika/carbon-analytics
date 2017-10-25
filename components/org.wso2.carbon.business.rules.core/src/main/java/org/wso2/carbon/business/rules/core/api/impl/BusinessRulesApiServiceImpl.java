@@ -98,9 +98,8 @@ public class BusinessRulesApiServiceImpl extends BusinessRulesApiService {
         try {
             int status = templateManagerService.deleteBusinessRule(businessRuleInstanceID, forceDelete);
             return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK,
-                    "Business Rule deleted " +
-                            "successfully!")).build();
-        } catch (BusinessRuleNotFoundException e) { // TODO: 25/10/17 LOG! 
+                    "Business Rule deleted successfully!")).build();
+        } catch (BusinessRuleNotFoundException e) { // TODO: 25/10/17 LOG!
             return Response.status(Response.Status.NOT_FOUND).build();
         } catch (TemplateManagerServiceException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();

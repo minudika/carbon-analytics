@@ -608,6 +608,11 @@ public class TemplateManagerService implements BusinessRulesService {
                         if (templateGroup != null) {
                             TemplateManagerHelper.validateTemplateGroup(templateGroup);
                             // Put to map, as denotable by UUID
+                            String uuid = templateGroup.getUuid();
+                            if (templateGroups.containsKey(uuid)) {
+                                throw new TemplateManagerServiceException("A templateGroup with the uuid " + uuid +
+                                " already exists.");
+                            }
                             templateGroups.put(templateGroup.getUuid(), templateGroup);
                         } else {
                             throw new TemplateManagerServiceException("Error in converting the file " +
