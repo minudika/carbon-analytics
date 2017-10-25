@@ -1,12 +1,37 @@
+/*
+ *  Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *  WSO2 Inc. licenses this file to you under the Apache License,
+ *  Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ */
+
 import React from 'react';
-// import './index.css';
-// Material-UI
+
+// Material UI Components
 import Typography from 'material-ui/Typography';
 import TemplateGroup from './TemplateGroup';
-import Header from "./Header";
 import Grid from 'material-ui/Grid';
-import BusinessRulesFunctions from "../utils/BusinessRulesFunctions";
+
+// App Components
+import Header from "./Header";
+
+// App Utilities
+import BusinessRulesUtilityFunctions from "../utils/BusinessRulesUtilityFunctions";
 import BusinessRulesConstants from "../utils/BusinessRulesConstants";
+
+// CSS
+import '../index.css';
 
 /**
  * Allows to select a Template Group, among Template Groups displayed as thumbnails
@@ -48,7 +73,7 @@ class TemplateGroupSelector extends React.Component {
                         uuid={templateGroup.uuid}
                         description={templateGroup.description}
                         onClick={(e) =>
-                            BusinessRulesFunctions.loadBusinessRulesFromTemplateCreator(templateGroup.uuid)
+                            BusinessRulesUtilityFunctions.loadBusinessRulesFromTemplateCreator(templateGroup.uuid)
                         }
                     />
                 </Grid>
@@ -63,7 +88,7 @@ class TemplateGroupSelector extends React.Component {
                         uuid={templateGroup.uuid}
                         description={templateGroup.description}
                         onClick={(e) =>
-                            BusinessRulesFunctions.loadBusinessRuleFromScratchCreator(templateGroup.uuid)
+                            BusinessRulesUtilityFunctions.loadBusinessRuleFromScratchCreator(templateGroup.uuid)
                         }
                     />
                 </Grid>
@@ -74,11 +99,10 @@ class TemplateGroupSelector extends React.Component {
 
         return (
             <div>
-                <Header
-                    title="Business Rule Manager"
-                />
+                <Header/>
+                <br/>
+                <br/>
                 <center>
-                    <br/>
                     <Typography type="headline">
                         Select a Template Group
                     </Typography>

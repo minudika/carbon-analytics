@@ -1,35 +1,61 @@
+/*
+ *  Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *  WSO2 Inc. licenses this file to you under the Apache License,
+ *  Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ */
+
 import React from 'react';
-// import './index.css';
-// Material-UI
+
+// Material UI Components
 import Typography from 'material-ui/Typography';
-import Property from './Property';
 import Button from 'material-ui/Button';
 import TextField from 'material-ui/TextField';
 import Collapse from 'material-ui/transitions/Collapse';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
-// import Autosuggest from 'react-autosuggest';
-// import match from 'autosuggest-highlight/match';
-// import parse from 'autosuggest-highlight/parse';
-
 import {FormControl, FormHelperText} from 'material-ui/Form';
 import Input, {InputLabel} from 'material-ui/Input';
 import Select from 'material-ui/Select';
 import {MenuItem} from 'material-ui/Menu';
 import Grid from 'material-ui/Grid';
 import Table, {TableBody, TableCell, TableHead, TableRow} from 'material-ui/Table';
-import BusinessRulesFunctions from "../utils/BusinessRulesFunctions";
-import BusinessRulesConstants from "../utils/BusinessRulesConstants";
-import AddIcon from "material-ui-icons/Add"
+import AddIcon from "material-ui-icons/Add";
 import {IconButton} from "material-ui";
 import Paper from 'material-ui/Paper';
-import FilterRule from "./FilterRule";
-import BusinessRulesAPIs from "../utils/BusinessRulesAPIs";
 import List, {ListItem, ListItemText} from 'material-ui/List';
+
+// App Components
+import Property from './Property';
+import FilterRule from "./FilterRule";
 import Header from "./Header";
 import BusinessRuleFromScratchForm from "./BusinessRuleFromScratchForm";
+
+// App Utilities
+import BusinessRulesUtilityFunctions from "../utils/BusinessRulesUtilityFunctions";
+import BusinessRulesConstants from "../utils/BusinessRulesConstants";
+import BusinessRulesAPICaller from "../utils/BusinessRulesAPICaller";
 import BusinessRulesMessages from "../utils/BusinessRulesMessages";
+
+// CSS
+import '../index.css';
+
+
+
+
+
 
 /**
  * Represents the input component of the business rule from scratch form,
@@ -51,7 +77,7 @@ class InputComponent extends React.Component {
             <FormControl disabled={this.props.mode === BusinessRulesConstants.BUSINESS_RULE_FORM_MODE_VIEW}>
                 <InputLabel htmlFor="inputRuleTemplate">Rule Template</InputLabel>
                 <Select
-                    value={(!BusinessRulesFunctions.isEmpty(this.props.selectedInputRuleTemplate)) ?
+                    value={(!BusinessRulesUtilityFunctions.isEmpty(this.props.selectedInputRuleTemplate)) ?
                         this.props.selectedInputRuleTemplate.uuid : ''
                     }
                     onChange={(e) => this.props.handleInputRuleTemplateSelected(e)} // todo: recheck
@@ -60,7 +86,7 @@ class InputComponent extends React.Component {
                     {inputRuleTemplateElements}
                 </Select>
                 <FormHelperText>
-                    {(!BusinessRulesFunctions.isEmpty(this.props.selectedInputRuleTemplate)) ?
+                    {(!BusinessRulesUtilityFunctions.isEmpty(this.props.selectedInputRuleTemplate)) ?
                         this.props.selectedInputRuleTemplate.description :
                         (BusinessRulesMessages.SELECT_RULE_TEMPLATE)
                     }
@@ -68,7 +94,7 @@ class InputComponent extends React.Component {
             </FormControl>
 
         // If an input rule template has been selected
-        if (!BusinessRulesFunctions.isEmpty(this.props.selectedInputRuleTemplate)) {
+        if (!BusinessRulesUtilityFunctions.isEmpty(this.props.selectedInputRuleTemplate)) {
             // To display input data properties
             let inputConfigurations = this.props.reArrangePropertiesForDisplay(
                 BusinessRulesConstants.BUSINESS_RULE_FROM_SCRATCH_PROPERTY_TYPE_INPUT,
@@ -127,22 +153,25 @@ class InputComponent extends React.Component {
                 </AppBar>
                 <Paper style={this.props.style.paper}>
                     <Collapse in={this.props.isExpanded} transitionDuration="auto" unmountOnExit>
-                        {inputRuleTemplatesToDisplay}
+                        <br/>
+                        <center>
+                            {inputRuleTemplatesToDisplay}
+                        </center>
                         <br/>
                         <br/>
                         <br/>
-                        <Grid container style={this.props.style.rootGrid} >
-                            <Grid item xs={12}>
-                                <Grid container spacing={40}>
-                                    <Grid item xs={9} style={{paddingLeft: 100, paddingRight: 100}}>
+                        <div>
+                            <Grid container spacing={40} styles={{flexGrow:1}}>
+                                <Grid item xs={12} sm={8}>
+                                    <div>
                                         {inputDataPropertiesToDisplay}
-                                    </Grid>
-                                    <Grid item xs={3}>
-                                        {exposedInputStreamFieldsToDisplay}
-                                    </Grid>
+                                    </div>
+                                </Grid>
+                                <Grid item xs={12} sm={4}>
+                                    {exposedInputStreamFieldsToDisplay}
                                 </Grid>
                             </Grid>
-                        </Grid>
+                        </div>
                         <br/>
                     </Collapse>
                 </Paper>

@@ -1,19 +1,46 @@
+/*
+ *  Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *  WSO2 Inc. licenses this file to you under the Apache License,
+ *  Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ */
+
 import React from 'react';
 import ReactDOM from 'react-dom';
-// import './index.css';
-// Material-UI
+
+// Material UI Components
 import IconButton from 'material-ui/IconButton';
 import RefreshIcon from 'material-ui-icons/Refresh';
 import EditIcon from 'material-ui-icons/Edit';
 import DeleteIcon from 'material-ui-icons/Delete';
 import {TableCell, TableRow,} from 'material-ui/Table';
-import BusinessRulesConstants from "../utils/BusinessRulesConstants";
-import BusinessRulesFunctions from "../utils/BusinessRulesFunctions";
-import BusinessRulesAPIs from "../utils/BusinessRulesAPIs";
 import Tooltip from 'material-ui/Tooltip';
 import VisibilityIcon from 'material-ui-icons/Visibility';
+
+// App Components
 import BusinessRulesManager from "./BusinessRulesManager";
+
+// App Utilities
+import BusinessRulesConstants from "../utils/BusinessRulesConstants";
+import BusinessRulesUtilityFunctions from "../utils/BusinessRulesUtilityFunctions";
+import BusinessRulesAPICaller from "../utils/BusinessRulesAPICaller";
 import BusinessRulesMessages from "../utils/BusinessRulesMessages";
+
+// CSS
+import '../index.css';
+
+
 
 // Styles related to this component
 const styles = {
@@ -49,20 +76,25 @@ class BusinessRule extends React.Component {
      * Views the business rule form in 'view' mode
      */
     viewBusinessRule() {
-        BusinessRulesFunctions.viewBusinessRuleForm(false, this.state.uuid)
+        BusinessRulesUtilityFunctions.viewBusinessRuleForm(false, this.state.uuid)
     }
 
     /**
      * Handles onClick action of the 'Re-deploy' button
      */
-    handleReDeployButtonClick() {
-        new BusinessRulesAPIs(BusinessRulesConstants.BASE_URL).redeployBusinessRule(this.state.uuid).then(
+    handleReDeployButtonClick() { //todo: implement redeploy properly with status code response
+        let apis = new BusinessRulesAPICaller(BusinessRulesConstants.BASE_URL)
+        let redeployPromise = apis.redeployBusinessRule(this.state.uuid).then(
             function(redeployResponse){
-                BusinessRulesFunctions.loadBusinessRulesManager(BusinessRulesMessages.BUSINESS_RULE_REDEPLOY_FAILURE)
+                // BusinessRulesUtilityFunctions.loadBusinessRulesManager(BusinessRulesMessages
+                //     .BUSINESS_RULE_REDEPLOY_SUCCESSFUL)
+                BusinessRulesUtilityFunctions.loadBusinessRulesManager(redeployResponse.data[2]) //todo: check deployment
+                // and remove hardcode
             }
         ).catch(function(error){
-            console.error('Failed to re-deploy business rule : ' + this.state.uuid + '.',error)
-            BusinessRulesFunctions.loadBusinessRulesManager(BusinessRulesMessages.BUSINESS_RULE_REDEPLOY_FAILURE)
+            console.error("Failed to deploy business rule '" + this.state.uuid + "'.")
+            BusinessRulesUtilityFunctions.loadBusinessRulesManager("Failed to deploy business rule '" + this.state.uuid + "'.") //todo: like
+            // todo: this for create stuff
         })
     }
 
@@ -70,7 +102,7 @@ class BusinessRule extends React.Component {
      * Opens the business rule form in 'edit' mode
      */
     handleEditButtonClick() {
-        BusinessRulesFunctions.viewBusinessRuleForm(true, this.state.uuid)
+        BusinessRulesUtilityFunctions.viewBusinessRuleForm(true, this.state.uuid)
     }
 
     /**
@@ -81,35 +113,49 @@ class BusinessRule extends React.Component {
     }
 
     render() {
-        // To show deployment status and redeploy button
-        let deployedStatus
-        let redeployButton
-        switch(this.state.status) {
-            case BusinessRulesConstants.BUSINESS_RULE_STATUS_DEPLOYMENT_FAILED:
-                // Deployment failed
-                deployedStatus = BusinessRulesConstants.BUSINESS_RULE_STATUS_DEPLOYMENT_FAILED_STRING
-                redeployButton =
-                    <Tooltip id="tooltip-right" title="Re-Deploy" placement="right-end">
-                        <IconButton color="primary" style={styles.deployButton} aria-label="Refresh"
+        let deploymentStatus = BusinessRulesConstants[this.state.status]
+        let retryDeployButton //todo: redefine the handler method
+        switch(this.state.status){
+            case (1) : {
+                retryDeployButton =
+                    <Tooltip id="tooltip-right" title="Deploy" placement="right-end">
+                        <IconButton color="primary" style={styles.deployButton} aria-label="Deploy"
                                     onClick={(e) => this.handleReDeployButtonClick()}>
                             <RefreshIcon/>
                         </IconButton>
                     </Tooltip>
                 break;
-            case BusinessRulesConstants.BUSINESS_RULE_STATUS_NOT_DEPLOYED:
-                // Not deployed
-                deployedStatus = BusinessRulesConstants.BUSINESS_RULE_STATUS_NOT_DEPLOYED_STRING
-                redeployButton =
+            }
+            case (2) : {
+                retryDeployButton =
                     <Tooltip id="tooltip-right" title="Re-Deploy" placement="right-end">
-                        <IconButton color="primary" style={styles.deployButton} aria-label="Refresh"
+                        <IconButton color="primary" style={styles.deployButton} aria-label="ReDeploy"
                                     onClick={(e) => this.handleReDeployButtonClick()}>
                             <RefreshIcon/>
                         </IconButton>
                     </Tooltip>
                 break;
-            default:
-                // Deployed
-                deployedStatus = BusinessRulesConstants.BUSINESS_RULE_STATUS_DEPLOYED_STRING
+            }
+            case (3) : {
+                retryDeployButton =
+                    <Tooltip id="tooltip-right" title="Retry Un-deploy" placement="right-end">
+                        <IconButton color="primary" style={styles.deployButton} aria-label="RetryUndeploy"
+                                    onClick={(e) => this.handleReDeployButtonClick()}>
+                            <RefreshIcon/>
+                        </IconButton>
+                    </Tooltip>
+                break;
+            }
+            case (4) : {
+                retryDeployButton =
+                    <Tooltip id="tooltip-right" title="Re-Deploy" placement="right-end">
+                        <IconButton color="primary" style={styles.deployButton} aria-label="ReDeploy"
+                                    onClick={(e) => this.handleReDeployButtonClick()}>
+                            <RefreshIcon/>
+                        </IconButton>
+                    </Tooltip>
+                break;
+            }
         }
 
         // To show all the action buttons
@@ -133,7 +179,7 @@ class BusinessRule extends React.Component {
                     </IconButton>
                 </Tooltip>
                 &nbsp;
-                {redeployButton}
+                {retryDeployButton}
             </TableCell>
 
 
@@ -142,7 +188,7 @@ class BusinessRule extends React.Component {
                 <TableCell>
                         {this.state.name}
                 </TableCell>
-                <TableCell>{deployedStatus}</TableCell>
+                <TableCell>{deploymentStatus}</TableCell>
                 {actionButtonsCell}
             </TableRow>
         )

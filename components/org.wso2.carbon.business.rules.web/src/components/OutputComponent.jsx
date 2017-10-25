@@ -1,13 +1,26 @@
+/*
+ *  Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *  WSO2 Inc. licenses this file to you under the Apache License,
+ *  Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ */
+
 import React from 'react';
-// import './index.css';
-// Material-UI
-import Typography from 'material-ui/Typography';
-import Property from './Property';
+
+// Material UI Components
 import Button from 'material-ui/Button';
 import TextField from 'material-ui/TextField';
-// import Autosuggest from 'react-autosuggest';
-// import match from 'autosuggest-highlight/match';
-// import parse from 'autosuggest-highlight/parse';
 import Collapse from 'material-ui/transitions/Collapse';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
@@ -18,17 +31,26 @@ import Select from 'material-ui/Select';
 import {MenuItem} from 'material-ui/Menu';
 import Grid from 'material-ui/Grid';
 import Table, {TableBody, TableCell, TableHead, TableRow} from 'material-ui/Table';
-import BusinessRulesFunctions from "../utils/BusinessRulesFunctions";
-import BusinessRulesConstants from "../utils/BusinessRulesConstants";
 import AddIcon from "material-ui-icons/Add"
 import {IconButton} from "material-ui";
 import Paper from 'material-ui/Paper';
-import FilterRule from "./FilterRule";
-import BusinessRulesAPIs from "../utils/BusinessRulesAPIs";
 import List, {ListItem, ListItemText} from 'material-ui/List';
+import Typography from 'material-ui/Typography';
+
+// App Components
+import Property from './Property';
+import FilterRule from "./FilterRule";
 import Header from "./Header";
 import BusinessRuleFromScratchForm from "./BusinessRuleFromScratchForm";
+
+// App Utilities
+import BusinessRulesUtilityFunctions from "../utils/BusinessRulesUtilityFunctions";
+import BusinessRulesConstants from "../utils/BusinessRulesConstants";
+import BusinessRulesAPICaller from "../utils/BusinessRulesAPICaller";
 import BusinessRulesMessages from "../utils/BusinessRulesMessages";
+
+// CSS
+import '../index.css';
 
 /**
  * Represents the output component of the business rule from scratch form,
@@ -52,7 +74,7 @@ class OutputComponent extends React.Component {
             >
                 <InputLabel htmlFor="inputRuleTemplate">Rule Template</InputLabel>
                 <Select
-                    value={(!BusinessRulesFunctions.isEmpty(this.props.selectedOutputRuleTemplate)) ?
+                    value={(!BusinessRulesUtilityFunctions.isEmpty(this.props.selectedOutputRuleTemplate)) ?
                         this.props.selectedOutputRuleTemplate.uuid : ''
                     }
                     onChange={(e) => this.props.handleOutputRuleTemplateSelected(e)}
@@ -61,7 +83,7 @@ class OutputComponent extends React.Component {
                     {outputRuleTemplateElements}
                 </Select>
                 <FormHelperText>
-                    {(!BusinessRulesFunctions.isEmpty(this.props.selectedOutputRuleTemplate)) ?
+                    {(!BusinessRulesUtilityFunctions.isEmpty(this.props.selectedOutputRuleTemplate)) ?
                         this.props.selectedOutputRuleTemplate.description :
                         (BusinessRulesMessages.SELECT_RULE_TEMPLATE)
                     }
@@ -69,7 +91,7 @@ class OutputComponent extends React.Component {
             </FormControl>
 
         // If an output rule template has been selected
-        if (!BusinessRulesFunctions.isEmpty(this.props.selectedOutputRuleTemplate)) {
+        if (!BusinessRulesUtilityFunctions.isEmpty(this.props.selectedOutputRuleTemplate)) {
             // To display output data properties
             let outputDataConfigurations = this.props.reArrangePropertiesForDisplay(
                 BusinessRulesConstants.BUSINESS_RULE_FROM_SCRATCH_PROPERTY_TYPE_OUTPUT,
@@ -86,7 +108,7 @@ class OutputComponent extends React.Component {
             // To display Output Mappings
 
             // If an input rule template has been selected
-            if (!BusinessRulesFunctions.isEmpty(this.props.selectedInputRuleTemplate)) {
+            if (!BusinessRulesUtilityFunctions.isEmpty(this.props.selectedInputRuleTemplate)) {
                 // Each field of the exposed output stream must be mapped with an available field of the exposed
                 // input stream
                 let exposedOutputStreamFieldNames =
@@ -115,7 +137,8 @@ class OutputComponent extends React.Component {
                 let outputMappingElementsToDisplay = exposedOutputStreamFieldNames.map((fieldName, index) =>
                     <TableRow key={index}>
                         <TableCell>
-                            <FormControl disabled={this.props.mode === BusinessRulesConstants.BUSINESS_RULE_FORM_MODE_VIEW}>
+                            <FormControl
+                                disabled={this.props.mode === BusinessRulesConstants.BUSINESS_RULE_FORM_MODE_VIEW}>
                                 <Select
                                     // No value when no mapping is specified
                                     // (used when a different output rule template is selected)
@@ -173,7 +196,10 @@ class OutputComponent extends React.Component {
                 </AppBar>
                 <Paper style={this.props.style.paper}>
                     <Collapse in={this.props.isExpanded} transitionDuration="auto" unmountOnExit>
-                        {outputRuleTemplatesToDisplay}
+                        <br/>
+                        <center>
+                            {outputRuleTemplatesToDisplay}
+                        </center>
                         <br/>
                         <br/>
                         <br/>

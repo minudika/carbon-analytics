@@ -1,3 +1,21 @@
+/*
+ *  Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *  WSO2 Inc. licenses this file to you under the Apache License,
+ *  Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ */
+
 import React from 'react';
 // import './index.css';
 // Material-UI
@@ -7,7 +25,7 @@ import axios from 'axios';
 /**
  * Used to call APIs, related to Business Rules
  */
-class BusinessRulesAPIs { //todo Rename as API caller
+class BusinessRulesAPICaller {
     constructor(url) {
         this.url = url
     }
@@ -18,7 +36,7 @@ class BusinessRulesAPIs { //todo Rename as API caller
     getHTTPClient() {
         let httpClient = axios.create({
             baseURL: this.url + '/business-rule',
-            timeout: 30000 // To overcome the timeout caused by some deployment nodes
+            timeout: 30000
         });
         //httpClient.defaults.headers.post['Content-Type'] = 'multipart/form-data';
         return httpClient;
@@ -135,4 +153,4 @@ class BusinessRulesAPIs { //todo Rename as API caller
     }
 }
 
-export default BusinessRulesAPIs;
+export default BusinessRulesAPICaller;

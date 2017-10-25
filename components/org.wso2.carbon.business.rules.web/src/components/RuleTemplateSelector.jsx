@@ -1,16 +1,40 @@
+/*
+ *  Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *  WSO2 Inc. licenses this file to you under the Apache License,
+ *  Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ */
+
 import React from 'react';
-// import './index.css';
-// Material-UI
+
+// Material UI Components
 import Typography from 'material-ui/Typography';
 import {FormControl, FormHelperText} from 'material-ui/Form';
 import Input, {InputLabel} from 'material-ui/Input';
 import {MenuItem} from 'material-ui/Menu';
 import Select from 'material-ui/Select';
-import BusinessRulesFunctions from "../utils/BusinessRulesFunctions";
-import BusinessRulesConstants from "../utils/BusinessRulesConstants";
+
+// App Components
 import Header from "./Header";
 import BusinessRuleFromTemplateForm from "./BusinessRuleFromTemplateForm";
-import BusinessRulesAPIs from "../utils/BusinessRulesAPIs";
+
+// App Utilities
+import BusinessRulesUtilityFunctions from "../utils/BusinessRulesUtilityFunctions";
+import BusinessRulesConstants from "../utils/BusinessRulesConstants";
+
+// CSS
+import '../index.css';
 
 /**
  * Allows to select a Rule Template, of a given type ('template', 'input' or 'output')
@@ -26,13 +50,12 @@ class RuleTemplateSelector extends React.Component {
         let state = this.state
         let self = this
         // Get selected rule template & update in the state
-        let selectedRuleTemplatePromise = new BusinessRulesAPIs(BusinessRulesConstants.BASE_URL)
-            .getRuleTemplate(templateGroupUUID, event.target.value);
+        let selectedRuleTemplatePromise = BusinessRulesUtilityFunctions.getRuleTemplate(templateGroupUUID, event.target.value)
         selectedRuleTemplatePromise.then(function(selectedRuleTemplateResponse){
             state['selectedRuleTemplate'] = selectedRuleTemplateResponse.data
             self.setState(state)
         })
-        // state['selectedRuleTemplate'] = BusinessRulesFunctions.getRuleTemplate(templateGroupUUID, event.target.value)
+        // state['selectedRuleTemplate'] = BusinessRulesUtilityFunctions.getRuleTemplate(templateGroupUUID, event.target.value)
     }
 
     constructor(props) {
@@ -87,9 +110,7 @@ class RuleTemplateSelector extends React.Component {
 
         return (
             <div>
-                <Header
-                    title="Business Rule Manager"
-                />
+                <Header/>
                 <br/>
                 <Typography type="headline">{this.state.selectedTemplateGroup.name}</Typography>
                 <Typography type="subheading">

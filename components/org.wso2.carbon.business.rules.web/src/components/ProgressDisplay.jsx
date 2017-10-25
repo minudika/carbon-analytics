@@ -1,16 +1,41 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import {CircularProgress} from 'material-ui/Progress';
-import Typography from "material-ui";
-import Header from "./Header";
-import Paper from 'material-ui/Paper';
-import BusinessRulesMessages from "../utils/BusinessRulesMessages";
-
-/**
- * Shows either the waiting progress or the error, in between processes
+/*
+ *  Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *  WSO2 Inc. licenses this file to you under the Apache License,
+ *  Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
  */
 
-// Styles related to this component
+import React from 'react';
+
+// Material UI Components
+import {CircularProgress} from 'material-ui/Progress';
+import {Typography} from "material-ui";
+import Paper from 'material-ui/Paper';
+
+// App Components
+import Header from "./Header";
+
+// App Utilities
+import BusinessRulesMessages from "../utils/BusinessRulesMessages";
+
+// CSS
+import '../index.css';
+
+/**
+ * Shows circular progress
+ */
+
 const styles = {
     progress: {
         color: '#EF6C00',
@@ -28,9 +53,7 @@ class ProgressDisplay extends React.Component {
         return (
             <div>
                 <center>
-                    <Header
-                        title="Business Rule Manager"
-                    />
+                    <Header/>
                     <br/>
                     <br/>
                     <div>
@@ -39,10 +62,10 @@ class ProgressDisplay extends React.Component {
                             {(this.props.error) ?
                                 (<div>
                                     <Typography type="headline">
-                                    {BusinessRulesMessages.ERROR_PROCESSING_YOUR_REQUEST}
-                                </Typography>
+                                        {this.props.error[0]}
+                                    </Typography>
                                     <Typography type="body2">
-                                        {this.props.error}
+                                        {this.props.error[1]}
                                     </Typography>
                                 </div>) :
                                 (<div>

@@ -1,10 +1,25 @@
+/*
+ *  Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *  WSO2 Inc. licenses this file to you under the Apache License,
+ *  Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ */
+
 import React from 'react';
-// import './index.css';
-// Material-UI
+
+// Material UI Components
 import Typography from 'material-ui/Typography';
-import Header from "./Header";
-import BusinessRulesFunctions from "../utils/BusinessRulesFunctions";
-import BusinessRule from "./BusinessRule";
 import Table, {TableBody, TableCell, TableHead, TableRow,} from 'material-ui/Table';
 import Button from "material-ui/Button";
 import AddIcon from "material-ui-icons/Add";
@@ -17,14 +32,28 @@ import Dialog, {
 import Paper from 'material-ui/Paper';
 import Snackbar from 'material-ui/Snackbar';
 import Slide from 'material-ui/transitions/Slide';
-import BusinessRulesMessages from "../utils/BusinessRulesMessages";
-import BusinessRulesConstants from "../utils/BusinessRulesConstants";
-import BusinessRulesAPIs from "../utils/BusinessRulesAPIs";
 import Switch from 'material-ui/Switch';
 import { FormControlLabel, FormGroup } from 'material-ui/Form';
-import Checkbox from 'material-ui/Checkbox';
 
-// Styles related to this component
+// App Components
+import Header from "./Header";
+import BusinessRule from "./BusinessRule";
+
+
+// App Utilities
+import BusinessRulesUtilityFunctions from "../utils/BusinessRulesUtilityFunctions";
+import BusinessRulesMessages from "../utils/BusinessRulesMessages";
+import BusinessRulesConstants from "../utils/BusinessRulesConstants";
+import BusinessRulesAPICaller from "../utils/BusinessRulesAPICaller";
+
+// CSS
+import '../index.css';
+
+/**
+ * Allows to select a Business Rule among Business Rules displayed as table rows
+ * and view, edit, delete or re-deploy (when not deployed already) each;
+ * Or to create a new business rule
+ */
 const styles = {
     floatButton: {
         backgroundColor: '#EF6C00',
@@ -57,12 +86,7 @@ const styles = {
     }
 }
 
-/**
- * Allows the user to select a business rule among the ones displayed as rows of the table
- * and view, edit, delete or re-deploy (when not deployed already) each;
- * Or to create a new business rule
- */
-class BusinessRulesManager extends React.Component { //todo: no more status. Message will be directly received
+class BusinessRulesManager extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -113,7 +137,7 @@ class BusinessRulesManager extends React.Component { //todo: no more status. Mes
             return (
                 <div style={styles.container}>
                     <Button fab color="primary" style={styles.floatButton} aria-label="Remove"
-                            onClick={(e) => BusinessRulesFunctions.loadBusinessRuleCreator()}>
+                            onClick={(e) => BusinessRulesUtilityFunctions.loadBusinessRuleCreator()}>
                         <AddIcon/>
                     </Button>
                     <Table>
@@ -136,14 +160,14 @@ class BusinessRulesManager extends React.Component { //todo: no more status. Mes
                 <div>
                     <Paper style={styles.paper}>
                         <Typography type="title">
-                            No business rule found!
+                            No business rule found
                         </Typography>
                         <Typography type="subheading">
                             Get started by creating one
                         </Typography>
                         <br/>
                         <Button color="primary" style={styles.raisedButton} aria-label="Remove"
-                                onClick={(e) => BusinessRulesFunctions.loadBusinessRuleCreator()}>
+                                onClick={(e) => BusinessRulesUtilityFunctions.loadBusinessRuleCreator()}>
                             Create
                         </Button>
                     </Paper>
@@ -160,13 +184,12 @@ class BusinessRulesManager extends React.Component { //todo: no more status. Mes
      */
     deleteBusinessRule(businessRuleUUID, forceDeleteStatus){
         this.setState({displayDialog: false})
-        new BusinessRulesAPIs(BusinessRulesConstants.BASE_URL)
-            .deleteBusinessRule(businessRuleUUID, forceDeleteStatus)
-            .then(function(deleteResponse){
-            BusinessRulesFunctions.loadBusinessRulesManager(202) // todo: precise responses. Use 200
+        let apis = new BusinessRulesAPICaller(BusinessRulesConstants.BASE_URL)
+        let deletePromise = apis.deleteBusinessRule(this.state.uuid, forceDeleteStatus).then(function(deleteResponse){
+            BusinessRulesUtilityFunctions.loadBusinessRulesManager(deleteResponse.data[2])
         }).catch(function(error){
-            console.error('Failed to delete business rule : ' + businessRuleUUID + '.',error)
-            BusinessRulesFunctions.loadBusinessRulesManager(502)
+            console.error("Failed to delete business rule '" + businessRuleUUID + "'.")
+            BusinessRulesUtilityFunctions.loadBusinessRulesManager("Failed to delete business rule '" + businessRuleUUID + "'.")
         })
     }
 
@@ -219,7 +242,7 @@ class BusinessRulesManager extends React.Component { //todo: no more status. Mes
                         //         style={styles.check}
                         //     />
                         // }
-                        label="Clear all the information on deletion test"
+                        label="Clear all the information on deletion"
                     />
                 </DialogContent>
                 <DialogActions>
@@ -242,7 +265,7 @@ class BusinessRulesManager extends React.Component { //todo: no more status. Mes
         this.setState({displayDeleteDialog: false})
     }
 
-    render() {
+    render() { // todo: don't consider state['']. do consider setState only
         // Show snackbar with response message, when this page is rendered after a form submission
         let snackBar =
             <Snackbar
@@ -254,35 +277,7 @@ class BusinessRulesManager extends React.Component { //todo: no more status. Mes
                 }}
                 message={
                     <span id="snackbarMessage">
-                        {(this.state.snackbarMessageStatus ===
-                            BusinessRulesMessages.BUSINESS_RULE_SAVE_SUCCESSFUL) ?
-                            (BusinessRulesMessages.BUSINESS_RULE_SAVE_SUCCESSFUL_MESSAGE) :
-                            (this.state.snackbarMessageStatus ===
-                                BusinessRulesMessages
-                                    .BUSINESS_RULE_SAVE_AND_DEPLOYMENT_SUCCESS) ?
-                                (BusinessRulesMessages
-                                    .BUSINESS_RULE_SAVE_AND_DEPLOYMENT_SUCCESS_MESSAGE) :
-                                (this.state.snackbarMessageStatus ===
-                                    BusinessRulesMessages
-                                        .BUSINESS_RULE_SAVE_SUCCESSFUL_DEPLOYMENT_FAILURE) ?
-                                    (BusinessRulesMessages
-                                        .BUSINESS_RULE_SAVE_SUCCESSFUL_DEPLOYMENT_FAILURE_MESSAGE) :
-                                    (this.state.snackbarMessageStatus ===
-                                        BusinessRulesMessages
-                                            .BUSINESS_RULE_SAVE_AND_DEPLOYMENT_FAILURE) ?
-                                        (BusinessRulesMessages
-                                            .BUSINESS_RULE_SAVE_AND_DEPLOYMENT_FAILURE_MESSAGE) :
-                                        (this.state.snackbarMessageStatus ===
-                                            BusinessRulesMessages
-                                                .BUSINESS_RULE_DELETION_SUCCESSFUL)?
-                                            (BusinessRulesMessages
-                                                .BUSINESS_RULE_DELETION_SUCCESSFUL_MESSAGE):
-                                            (this.state.snackbarMessageStatus ===
-                                                BusinessRulesMessages
-                                                    .BUSINESS_RULE_DELETION_FAILURE)?
-                                                (BusinessRulesMessages
-                                                    .BUSINESS_RULE_DELETION_FAILURE_MESSAGE):
-                                                ('')}
+                        {this.state.snackbarMessage}
                     </span>
                 }
             />
@@ -293,9 +288,7 @@ class BusinessRulesManager extends React.Component { //todo: no more status. Mes
                 {this.showDeleteConfirmationDialog()}
                 {snackBar}
                 <center>
-                    <Header
-                        title="Business Rule Manager"
-                    />
+                    <Header/>
                     <br/>
                     <br/>
                     <div>

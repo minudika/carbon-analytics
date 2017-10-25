@@ -1,24 +1,49 @@
+/*
+ *  Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *  WSO2 Inc. licenses this file to you under the Apache License,
+ *  Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ */
+
 import React from 'react';
 import ReactDOM from 'react-dom';
-// import './index.css';
-// Material-UI
-import Property from './Property';
+
+// Material UI Components
 import Button from 'material-ui/Button';
 import TextField from 'material-ui/TextField';
 import Dialog, {DialogActions, DialogContent, DialogContentText, DialogTitle,} from 'material-ui/Dialog';
-import BusinessRulesFunctions from "../utils/BusinessRulesFunctions";
-import BusinessRulesConstants from "../utils/BusinessRulesConstants";
-import BusinessRulesAPIs from "../utils/BusinessRulesAPIs";
-import Header from "./Header";
 import Typography from 'material-ui/Typography';
 import {FormControl, FormHelperText} from 'material-ui/Form';
 import Select from 'material-ui/Select';
 import Input, {InputLabel} from 'material-ui/Input';
-import BusinessRulesMessages from "../utils/BusinessRulesMessages";
-import {MenuItem} from 'material-ui/Menu';
-import ProgressDisplay from "./ProgressDisplay";
 import Paper from 'material-ui/Paper';
 import Grid from 'material-ui/Grid';
+import {MenuItem} from 'material-ui/Menu';
+
+// App Components
+import Property from './Property';
+import Header from "./Header";
+import ProgressDisplay from "./ProgressDisplay";
+
+// App Utilities
+import BusinessRulesUtilityFunctions from "../utils/BusinessRulesUtilityFunctions";
+import BusinessRulesConstants from "../utils/BusinessRulesConstants";
+import BusinessRulesAPICaller from "../utils/BusinessRulesAPICaller";
+import BusinessRulesMessages from "../utils/BusinessRulesMessages";
+
+// CSS
+import '../index.css';
 
 /**
  * Represents a form, shown to create Business Rules from template
@@ -94,14 +119,16 @@ class BusinessRuleFromTemplateForm extends React.Component {
         let state = this.state
         let that = this
         // Get selected rule template & update in the state
-        let selectedRuleTemplatePromise = BusinessRulesFunctions.getRuleTemplate(templateGroupUUID, event.target.value)
+        let selectedRuleTemplatePromise = BusinessRulesUtilityFunctions.getRuleTemplate(templateGroupUUID, event.target.value)
         selectedRuleTemplatePromise.then(function (selectedRuleTemplateResponse) {
             state['selectedRuleTemplate'] = selectedRuleTemplateResponse.data
 
             // Set properties in the state as default value
             for (let propertyKey in state.selectedRuleTemplate.properties) {
-                state['businessRuleProperties'][propertyKey] =
-                    that.state.selectedRuleTemplate.properties[propertyKey.toString()]['defaultValue']
+                if(state.selectedRuleTemplate.properties.hasOwnProperty(propertyKey)){ //todo: might go wrong
+                    state['businessRuleProperties'][propertyKey] =
+                        that.state.selectedRuleTemplate.properties[propertyKey.toString()]['defaultValue']
+                }
             }
 
             that.setState(state)
@@ -128,7 +155,7 @@ class BusinessRuleFromTemplateForm extends React.Component {
     handleBusinessRuleNameChange(event) {
         let state = this.state
         state['businessRuleName'] = event.target.value
-        state['businessRuleUUID'] = BusinessRulesFunctions.generateBusinessRuleUUID(event.target.value)
+        state['businessRuleUUID'] = BusinessRulesUtilityFunctions.generateBusinessRuleUUID(event.target.value)
         this.setState(state)
     }
 
@@ -151,15 +178,13 @@ class BusinessRuleFromTemplateForm extends React.Component {
             businessRuleObject['properties'] = this.state.businessRuleProperties
 
             // Send prepared business rule object to API
-            new BusinessRulesAPIs(BusinessRulesConstants.BASE_URL)
-                .createBusinessRule(JSON.stringify(businessRuleObject), deployStatus.toString())
-                .then(function (response) {
-                    BusinessRulesFunctions.loadBusinessRulesManager(response.status);
-                }).catch(function (error) {
-                console.error('Failed to create business rule.',error)
+            let apis = new BusinessRulesAPICaller(BusinessRulesConstants.BASE_URL)
+            apis.createBusinessRule(JSON.stringify(businessRuleObject), deployStatus.toString()).then(function (response) {
+                BusinessRulesUtilityFunctions.loadBusinessRulesManager(response.data[2]);
+            }).catch(function (error) {
                 ReactDOM.render(
                     <ProgressDisplay
-                        error={BusinessRulesMessages.API_FAILURE}/>, document.getElementById('root'))
+                        error={BusinessRulesMessages.API_FAILURE_ERROR}/>, document.getElementById('root'))
             })
             // Show 'please wait'
             ReactDOM.render(<ProgressDisplay/>, document.getElementById('root'))
@@ -191,12 +216,12 @@ class BusinessRuleFromTemplateForm extends React.Component {
             businessRuleObject['ruleTemplateUUID'] = this.state.selectedRuleTemplate.uuid
             businessRuleObject['properties'] = this.state.businessRuleProperties
 
-            // Send prepared business rule object to API with Deployment true or false
-            new BusinessRulesAPIs(BusinessRulesConstants.BASE_URL)
-                .updateBusinessRule(businessRuleObject['uuid'], JSON.stringify(businessRuleObject), deployStatus)
-                .then(function (response) {
-                    BusinessRulesFunctions.loadBusinessRulesManager(response.status.toString());
-                })
+            // Send prepared business rule object to API
+            let apis = new BusinessRulesAPICaller(BusinessRulesConstants.BASE_URL)
+            // Deployment true or false
+            apis.updateBusinessRule(businessRuleObject['uuid'], JSON.stringify(businessRuleObject), deployStatus).then(function (response) {
+                BusinessRulesUtilityFunctions.loadBusinessRulesManager(response.data[2]);
+            })
         } else {
             // Display error
             this.setDialog(BusinessRulesMessages.ALL_FIELDS_REQUIRED_ERROR_TITLE,
@@ -209,18 +234,18 @@ class BusinessRuleFromTemplateForm extends React.Component {
      * Checks whether the business rule object in the state is a valid one or not
      */
     isBusinessRuleValid() {
-        if (this.state.businessRuleName === '' || BusinessRulesFunctions.isEmpty(this.state.businessRuleName)) {
+        if (this.state.businessRuleName === '' || BusinessRulesUtilityFunctions.isEmpty(this.state.businessRuleName)) {
             return false
         }
-        if (this.state.businessRuleUUID === '' || BusinessRulesFunctions.isEmpty(this.state.businessRuleUUID)) {
+        if (this.state.businessRuleUUID === '' || BusinessRulesUtilityFunctions.isEmpty(this.state.businessRuleUUID)) {
             return false
         }
         if (this.state.selectedTemplateGroup.uuid === '' ||
-            BusinessRulesFunctions.isEmpty(this.state.selectedTemplateGroup.uuid)) {
+            BusinessRulesUtilityFunctions.isEmpty(this.state.selectedTemplateGroup.uuid)) {
             return false
         }
         if (this.state.selectedRuleTemplate.uuid === '' ||
-            BusinessRulesFunctions.isEmpty(this.state.selectedRuleTemplate)) {
+            BusinessRulesUtilityFunctions.isEmpty(this.state.selectedRuleTemplate)) {
             return false
         }
         for (let propertyKey in this.state.businessRuleProperties) {
@@ -294,7 +319,7 @@ class BusinessRuleFromTemplateForm extends React.Component {
                 disabled={this.state.formMode !== BusinessRulesConstants.BUSINESS_RULE_FORM_MODE_CREATE}>
                 <InputLabel htmlFor="ruleTemplate">RuleTemplate</InputLabel>
                 <Select
-                    value={(!BusinessRulesFunctions.isEmpty(this.state.selectedRuleTemplate)) ?
+                    value={(!BusinessRulesUtilityFunctions.isEmpty(this.state.selectedRuleTemplate)) ?
                         (this.state.selectedRuleTemplate.uuid) :
                         ('')
                     }
@@ -304,7 +329,7 @@ class BusinessRuleFromTemplateForm extends React.Component {
                     {templateRuleTemplatesToDisplay}
                 </Select>
                 <FormHelperText>
-                    {(!BusinessRulesFunctions.isEmpty(this.state.selectedRuleTemplate)) ?
+                    {(!BusinessRulesUtilityFunctions.isEmpty(this.state.selectedRuleTemplate)) ?
                         (this.state.selectedRuleTemplate.description) :
                         (BusinessRulesMessages.SELECT_RULE_TEMPLATE)
                     }
@@ -336,8 +361,6 @@ class BusinessRuleFromTemplateForm extends React.Component {
 
             // Push propertyKey and propertyObject as an array member, in order to use the array.map() function
             for (let propertyKey in this.state.selectedRuleTemplate.properties) {
-                // Modify default value, as the entered property value,
-                // in order to display initially in the form
                 if (this.state.selectedRuleTemplate.properties.hasOwnProperty(propertyKey)) {
                     properties.push({
                         propertyName: propertyKey,
@@ -368,7 +391,7 @@ class BusinessRuleFromTemplateForm extends React.Component {
 
         // If form should be displayed for Creating a business rule
         if (this.state.formMode === BusinessRulesConstants.BUSINESS_RULE_FORM_MODE_CREATE) {
-            if (!BusinessRulesFunctions.isEmpty(this.state.selectedRuleTemplate)) {
+            if (!BusinessRulesUtilityFunctions.isEmpty(this.state.selectedRuleTemplate)) {
                 submitButtons =
                     <div>
                         <Button raised color="default" style={styles.secondaryButton}
@@ -399,12 +422,10 @@ class BusinessRuleFromTemplateForm extends React.Component {
         return (
             <div>
                 {this.showDialog()}
-                <Header
-                    title="Business Rule Manager"
-                />
+                <Header/>
                 <br/>
                 <Grid container spacing={24} style={styles.formRoot} justify="center">
-                    <Grid item xs={12} sm={4}>
+                    <Grid item xs={12} sm={6}>
                         <Paper style={styles.formPaper}>
                             <center>
                                 <Typography type="headline">
@@ -420,6 +441,7 @@ class BusinessRuleFromTemplateForm extends React.Component {
                                 {businessRuleNameTextField}
                             </center>
                             {propertiesToDisplay}
+                            <br/>
                             <br/>
                             <center>
                                 {submitButtons}
