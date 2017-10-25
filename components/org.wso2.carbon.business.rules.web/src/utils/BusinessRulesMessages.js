@@ -1,3 +1,21 @@
+/*
+ *  Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *  WSO2 Inc. licenses this file to you under the Apache License,
+ *  Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ */
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 // import './index.css';
@@ -17,7 +35,7 @@ import Select from 'material-ui/Select';
 import TemplateGroupSelector from "../components/TemplateGroupSelector";
 
 /**
- * Contains messages / errors to be displayed
+ * Has values for all the string constants related to displaying messages to the user
  */
 const BusinessRulesMessages = {
     // Business Rule form (common)
@@ -36,41 +54,12 @@ const BusinessRulesMessages = {
     // Output component
     MAPPING_NOT_AVAILABLE: 'Please select both input & output rule templates',
 
-    // Error codes related to save & deployment
-    BUSINESS_RULE_SAVE_SUCCESSFUL : 200,
-    BUSINESS_RULE_SAVE_AND_DEPLOYMENT_SUCCESS: 201,
-    BUSINESS_RULE_SAVE_SUCCESSFUL_DEPLOYMENT_FAILURE: 501,
-    BUSINESS_RULE_SAVE_AND_DEPLOYMENT_FAILURE: 500,
-
-    // Messages related to save & deployment
-    BUSINESS_RULE_SAVE_SUCCESSFUL_MESSAGE : 'Successfully saved business rule',
-    BUSINESS_RULE_SAVE_AND_DEPLOYMENT_SUCCESS_MESSAGE: 'Business rule deployed successfully',
-    BUSINESS_RULE_SAVE_SUCCESSFUL_DEPLOYMENT_FAILURE_MESSAGE: 'Saved, and failed to deploy business rule',
-    BUSINESS_RULE_SAVE_AND_DEPLOYMENT_FAILURE_MESSAGE: 'Failed to save and deploy business rule',
-
-    // Deleting business rule
-    BUSINESS_RULE_DELETION_SUCCESSFUL: 202,
-    BUSINESS_RULE_DELETION_FAILURE: 502,
-
-    // Re-deploying business rule
-    BUSINESS_RULE_REDEPLOY_SUCCESSFUL: 203,
-    BUSINESS_RULE_REDEPLOY_FAILURE: 503,
-
-
-    BUSINESS_RULE_DELETION_SUCCESSFUL_MESSAGE: 'Successfully deleted business rule',
-    BUSINESS_RULE_DELETION_FAILURE_MESSAGE: 'Failed to delete business rule',
-
     BUSINESS_RULE_DELETION_CONFIRMATION_TITLE: 'Confirm delete',
     BUSINESS_RUL_DELETION_CONFIRMATION_CONTENT: 'Do you really want to delete this business rule?',
 
-    // Common errors
-    CONNECTION_FAILURE: 'There was an error while connecting to the server', //todo: Cannot connect to the server -
-    // todo the heading (Connection Error)
-    ERROR_PROCESSING_YOUR_REQUEST: 'Error processing your request',
-    API_FAILURE: 'There was some problem in sending data through the API',
-
-    // Error titles
-    ERROR_500: 'Server error' // todo: no need for them, since dialog box is only shown during deletion & non filled
+    // Generalized errors with titles
+    CONNECTION_FAILURE_ERROR: ['Connection Failed', 'There was an error connecting to the server'],
+    API_FAILURE_ERROR: ['Request Failed', 'There was an error processing your request'],
 }
 
 export default BusinessRulesMessages;

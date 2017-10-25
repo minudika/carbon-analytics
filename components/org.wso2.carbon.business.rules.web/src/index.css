@@ -62,37 +62,6 @@
 
 body {
     font: 14px "Century Gothic", Futura, sans-serif;
-    margin: 20px;
+    /*margin: 20px;*/
 }
 
-/*ol, ul {*/
-    /*padding-left: 30px;*/
-/*}*/
-
-.templateGroupCard{
-    padding: 10px;
-    color: white;
-    background-color: #242424;
-    margin-bottom: 15px;
-    border-radius: 5px;
-    width: 40%
-}
-
-.templateGroupCard:hover{
-    color: #df5028;
-    transition-duration: 0.2s;
-}
-
-.ruleTemplateCard{
-    padding: 10px;
-    color: white;
-    background-color: #2A2D40;
-    margin-bottom: 15px;
-    border-radius: 5px;
-    width: 40%
-}
-
-.ruleTemplateCard:hover{
-    background-color: #007F7D;
-    transition-duration: 0.2s;
-}

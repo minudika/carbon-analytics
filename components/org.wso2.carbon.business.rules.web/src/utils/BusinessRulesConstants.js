@@ -1,3 +1,21 @@
+/*
+ *  Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *  WSO2 Inc. licenses this file to you under the Apache License,
+ *  Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ */
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 // import './index.css';
@@ -49,10 +67,20 @@ const BusinessRulesConstants = {
     // Business Rule Filter Rule operators
     BUSINESS_RULE_FILTER_RULE_OPERATORS: ['<','<=','>','>=','==','!='],
 
-    // Business Rule deployment statuses
+    // Business Rule deployment statuses todo: remove this section
     BUSINESS_RULE_STATUS_DEPLOYED: 3,
     BUSINESS_RULE_STATUS_DEPLOYMENT_FAILED: 1, // Tried to save & deploy, but only save was successful
     BUSINESS_RULE_STATUS_NOT_DEPLOYED: 0, // Tried only to save, and was successful todo: check number
+
+    // Business Rule deployment statuses
+    BUSINESS_RULE_STATUSES: [ // todo: maintain statuses
+      'Deployed', // 0
+      'Saved', // 1
+      'Partially Deployed', // 2
+      'Partially Undeployed', // 3
+      'Deployment Failure', // 4
+      'Error' // 5
+    ],
 
     BUSINESS_RULE_STATUS_DEPLOYED_STRING: 'Deployed',
     BUSINESS_RULE_STATUS_NOT_DEPLOYED_STRING: 'Not Deployed',
