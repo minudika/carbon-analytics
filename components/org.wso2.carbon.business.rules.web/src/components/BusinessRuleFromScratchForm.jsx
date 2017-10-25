@@ -18,7 +18,6 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-
 // Material UI Components
 import Button from 'material-ui/Button';
 import TextField from 'material-ui/TextField';
@@ -26,7 +25,6 @@ import Dialog, {DialogActions, DialogContent, DialogContentText, DialogTitle,} f
 import {Typography} from "material-ui";
 import Grid from 'material-ui/Grid';
 import Paper from 'material-ui/Paper';
-
 // App Components
 import Header from "./Header";
 import Property from './Property';
@@ -34,17 +32,13 @@ import InputComponent from "./InputComponent";
 import OutputComponent from "./OutputComponent";
 import FilterComponent from "./FilterComponent";
 import ProgressDisplay from "./ProgressDisplay";
-
 // App Utilities
 import BusinessRulesUtilityFunctions from "../utils/BusinessRulesUtilityFunctions";
 import BusinessRulesConstants from "../utils/BusinessRulesConstants";
 import BusinessRulesAPICaller from "../utils/BusinessRulesAPICaller";
 import BusinessRulesMessages from "../utils/BusinessRulesMessages";
-
 // CSS
 import '../index.css';
-
-
 
 /**
  * Represents a form, shown to for Business Rules from scratch

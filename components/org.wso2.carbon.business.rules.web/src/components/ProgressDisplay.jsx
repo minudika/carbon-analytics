@@ -17,18 +17,12 @@
  */
 
 import React from 'react';
-
 // Material UI Components
 import {CircularProgress} from 'material-ui/Progress';
 import {Typography} from "material-ui";
 import Paper from 'material-ui/Paper';
-
 // App Components
 import Header from "./Header";
-
-// App Utilities
-import BusinessRulesMessages from "../utils/BusinessRulesMessages";
-
 // CSS
 import '../index.css';
 

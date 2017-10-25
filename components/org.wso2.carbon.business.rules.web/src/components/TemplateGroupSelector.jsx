@@ -17,19 +17,15 @@
  */
 
 import React from 'react';
-
 // Material UI Components
 import Typography from 'material-ui/Typography';
 import TemplateGroup from './TemplateGroup';
 import Grid from 'material-ui/Grid';
-
 // App Components
 import Header from "./Header";
-
 // App Utilities
 import BusinessRulesUtilityFunctions from "../utils/BusinessRulesUtilityFunctions";
 import BusinessRulesConstants from "../utils/BusinessRulesConstants";
-
 // CSS
 import '../index.css';
 
@@ -64,7 +60,7 @@ class TemplateGroupSelector extends React.Component {
         let templateGroups
 
         // Business rule to be created from template
-        if(this.state.mode === BusinessRulesConstants.BUSINESS_RULE_TYPE_TEMPLATE){
+        if (this.state.mode === BusinessRulesConstants.BUSINESS_RULE_TYPE_TEMPLATE) {
             templateGroups = this.state.templateGroups.map((templateGroup) =>
                 <Grid item key={templateGroup.uuid}>
                     <TemplateGroup
@@ -78,7 +74,7 @@ class TemplateGroupSelector extends React.Component {
                     />
                 </Grid>
             )
-        }else{
+        } else {
             // Business rule to be created from scratch
             templateGroups = this.state.templateGroups.map((templateGroup) =>
                 <Grid item key={templateGroup.uuid}>
@@ -94,7 +90,6 @@ class TemplateGroupSelector extends React.Component {
                 </Grid>
             )
         }
-
 
 
         return (

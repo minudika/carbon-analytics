@@ -18,24 +18,15 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-
 // Material UI Components
-import Typography from 'material-ui/Typography';
-
 // App Components
-import Header from "./Header";
 import BusinessRuleFromTemplateForm from "./BusinessRuleFromTemplateForm";
 import BusinessRuleFromScratchForm from "./BusinessRuleFromScratchForm";
-
 // App Utilities
 import BusinessRulesUtilityFunctions from "../utils/BusinessRulesUtilityFunctions";
 import BusinessRulesConstants from "../utils/BusinessRulesConstants";
-
 // CSS
 import '../index.css';
-
-
-
 
 /**
  * Allows to edit a Business Rule
@@ -69,9 +60,9 @@ class BusinessRuleEditor extends React.Component {
                     that.state.businessRule.ruleTemplateUUID
                 )
 
-                ruleTemplatePromise.then(function(ruleTemplateResponse){
+                ruleTemplatePromise.then(function (ruleTemplateResponse) {
                     // Render the form
-                    ReactDOM.render (
+                    ReactDOM.render(
                         <BusinessRuleFromTemplateForm
                             businessRuleType={BusinessRulesConstants.BUSINESS_RULE_TYPE_TEMPLATE}
                             formMode={BusinessRulesConstants.BUSINESS_RULE_FORM_MODE_EDIT}
@@ -91,7 +82,7 @@ class BusinessRuleEditor extends React.Component {
                     that.state.businessRule.inputRuleTemplateUUID
                 )
 
-                inputRuleTemplatePromise.then(function(inputRuleTemplateResponse){
+                inputRuleTemplatePromise.then(function (inputRuleTemplateResponse) {
                     let inputRuleTemplate = inputRuleTemplateResponse.data
 
                     // Get output rule template
@@ -100,11 +91,11 @@ class BusinessRuleEditor extends React.Component {
                         this.state.businessRule.outputRuleTemplateUUID
                     )
 
-                    outputRuleTemplatePromise.then(function(outputRuleTemplateResponse){
+                    outputRuleTemplatePromise.then(function (outputRuleTemplateResponse) {
                         let outputRuleTemplate = outputRuleTemplateResponse.data
 
                         // Business Rule has been created from scratch
-                        ReactDOM.render (
+                        ReactDOM.render(
                             <BusinessRuleFromScratchForm
                                 businessRuleType={BusinessRulesConstants.BUSINESS_RULE_TYPE_SCRATCH}
                                 formMode={BusinessRulesConstants.BUSINESS_RULE_FORM_MODE_EDIT}

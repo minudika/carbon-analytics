@@ -17,24 +17,17 @@
  */
 
 import React from 'react';
-
 // Material UI Components
 import Typography from 'material-ui/Typography';
 import CreateButton from "./CreateButton";
 import BusinessRulesUtilityFunctions from "../utils/BusinessRulesUtilityFunctions";
 import Grid from 'material-ui/Grid';
-import Paper from 'material-ui/Paper';
-
 // App Components
 import Header from "./Header";
-
 // App Utilities
 import BusinessRulesConstants from "../utils/BusinessRulesConstants";
-
 // CSS
 import '../index.css';
-
-
 
 
 /**

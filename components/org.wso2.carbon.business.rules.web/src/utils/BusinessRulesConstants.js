@@ -17,22 +17,6 @@
  */
 
 import React from 'react';
-import ReactDOM from 'react-dom';
-// import './index.css';
-// Material-UI
-import Typography from 'material-ui/Typography';
-import Card, {CardContent, CardHeader} from 'material-ui/Card';
-import Button from 'material-ui/Button';
-import Cake from 'material-ui-icons/Cake'
-import Menu from 'material-ui-icons/Menu'
-import Code from 'material-ui-icons/Code'
-import IconButton from 'material-ui/IconButton';
-import TextField from 'material-ui/TextField';
-import {FormControl, FormHelperText} from 'material-ui/Form';
-import Input, {InputLabel} from 'material-ui/Input';
-import {MenuItem} from 'material-ui/Menu';
-import Select from 'material-ui/Select';
-import TemplateGroupSelector from "../components/TemplateGroupSelector";
 
 /**
  * Has values for all the constants related to Business Rules web app
@@ -65,7 +49,7 @@ const BusinessRulesConstants = {
     BUSINESS_RULE_DEPLOYMENT_STATUS_NOT_DEPLOYED: "notDeployed",
 
     // Business Rule Filter Rule operators
-    BUSINESS_RULE_FILTER_RULE_OPERATORS: ['<','<=','>','>=','==','!='],
+    BUSINESS_RULE_FILTER_RULE_OPERATORS: ['<', '<=', '>', '>=', '==', '!='],
 
     // Business Rule deployment statuses todo: remove this section
     BUSINESS_RULE_STATUS_DEPLOYED: 3,
@@ -74,19 +58,17 @@ const BusinessRulesConstants = {
 
     // Business Rule deployment statuses
     BUSINESS_RULE_STATUSES: [ // todo: maintain statuses
-      'Deployed', // 0
-      'Saved', // 1
-      'Partially Deployed', // 2
-      'Partially Undeployed', // 3
-      'Deployment Failure', // 4
-      'Error' // 5
+        'Deployed', // 0
+        'Saved', // 1
+        'Partially Deployed', // 2
+        'Partially Undeployed', // 3
+        'Deployment Failure', // 4
+        'Error' // 5
     ],
 
     BUSINESS_RULE_STATUS_DEPLOYED_STRING: 'Deployed',
     BUSINESS_RULE_STATUS_NOT_DEPLOYED_STRING: 'Not Deployed',
     BUSINESS_RULE_STATUS_DEPLOYMENT_FAILED_STRING: 'Deployment Failed',
-
-
 
 
     // URL for APIs

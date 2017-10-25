@@ -17,24 +17,16 @@
  */
 
 import React from 'react';
-
 // Material UI Components
 import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
-import IconButton from 'material-ui/IconButton';
-import Cake from 'material-ui-icons/Cake';
 import List from 'material-ui-icons/List';
 import Create from 'material-ui-icons/Create';
-import Grid from 'material-ui/Grid';
 import Paper from 'material-ui/Paper';
-
-// App Components
 // App Utilities
 import BusinessRulesConstants from "../utils/BusinessRulesConstants";
-
 // CSS
 import '../index.css';
-
 
 
 /**
@@ -70,9 +62,9 @@ class CreateButton extends React.Component {
     render() {
         let icon
 
-        if(this.state.mode === BusinessRulesConstants.BUSINESS_RULE_TYPE_TEMPLATE){
+        if (this.state.mode === BusinessRulesConstants.BUSINESS_RULE_TYPE_TEMPLATE) {
             icon = <List/>
-        }else{
+        } else {
             icon = <Create/>
         }
 

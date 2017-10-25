@@ -17,8 +17,6 @@
  */
 
 import React from 'react';
-import ReactDOM from 'react-dom';
-
 // Material UI Components
 import IconButton from 'material-ui/IconButton';
 import RefreshIcon from 'material-ui-icons/Refresh';
@@ -27,19 +25,12 @@ import DeleteIcon from 'material-ui-icons/Delete';
 import {TableCell, TableRow,} from 'material-ui/Table';
 import Tooltip from 'material-ui/Tooltip';
 import VisibilityIcon from 'material-ui-icons/Visibility';
-
-// App Components
-import BusinessRulesManager from "./BusinessRulesManager";
-
 // App Utilities
 import BusinessRulesConstants from "../utils/BusinessRulesConstants";
 import BusinessRulesUtilityFunctions from "../utils/BusinessRulesUtilityFunctions";
 import BusinessRulesAPICaller from "../utils/BusinessRulesAPICaller";
-import BusinessRulesMessages from "../utils/BusinessRulesMessages";
-
 // CSS
 import '../index.css';
-
 
 
 // Styles related to this component
@@ -85,13 +76,13 @@ class BusinessRule extends React.Component {
     handleReDeployButtonClick() { //todo: implement redeploy properly with status code response
         let apis = new BusinessRulesAPICaller(BusinessRulesConstants.BASE_URL)
         let redeployPromise = apis.redeployBusinessRule(this.state.uuid).then(
-            function(redeployResponse){
+            function (redeployResponse) {
                 // BusinessRulesUtilityFunctions.loadBusinessRulesManager(BusinessRulesMessages
                 //     .BUSINESS_RULE_REDEPLOY_SUCCESSFUL)
                 BusinessRulesUtilityFunctions.loadBusinessRulesManager(redeployResponse.data[2]) //todo: check deployment
                 // and remove hardcode
             }
-        ).catch(function(error){
+        ).catch(function (error) {
             console.error("Failed to deploy business rule '" + this.state.uuid + "'.")
             BusinessRulesUtilityFunctions.loadBusinessRulesManager("Failed to deploy business rule '" + this.state.uuid + "'.") //todo: like
             // todo: this for create stuff
@@ -115,7 +106,7 @@ class BusinessRule extends React.Component {
     render() {
         let deploymentStatus = BusinessRulesConstants[this.state.status]
         let retryDeployButton //todo: redefine the handler method
-        switch(this.state.status){
+        switch (this.state.status) {
             case (1) : {
                 retryDeployButton =
                     <Tooltip id="tooltip-right" title="Deploy" placement="right-end">
@@ -186,7 +177,7 @@ class BusinessRule extends React.Component {
         return (
             <TableRow>
                 <TableCell>
-                        {this.state.name}
+                    {this.state.name}
                 </TableCell>
                 <TableCell>{deploymentStatus}</TableCell>
                 {actionButtonsCell}

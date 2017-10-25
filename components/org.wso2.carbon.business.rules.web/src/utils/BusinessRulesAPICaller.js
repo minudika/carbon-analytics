@@ -17,9 +17,6 @@
  */
 
 import React from 'react';
-// import './index.css';
-// Material-UI
-// axios
 import axios from 'axios';
 
 /**
@@ -93,8 +90,8 @@ class BusinessRulesAPICaller {
 
         // Send as multipart/form-data
         let httpClient = this.getHTTPClient()
-        return httpClient.post('/instances?deploy='+deployStatus,formData,
-            {headers:{'Content-Type': 'multipart/form-data'}})
+        return httpClient.post('/instances?deploy=' + deployStatus, formData,
+            {headers: {'Content-Type': 'multipart/form-data'}})
     }
 
     /**
@@ -127,8 +124,8 @@ class BusinessRulesAPICaller {
 
         // Send as multipart/form-data
         let httpClient = this.getHTTPClient()
-        return httpClient.put('/instances?deploy='+deployStatus+'?businessRuleInstanceID='+businessRuleID,formData,
-            {headers:{'Content-Type': 'multipart/form-data'}})
+        return httpClient.put('/instances?deploy=' + deployStatus + '?businessRuleInstanceID=' + businessRuleID, formData,
+            {headers: {'Content-Type': 'multipart/form-data'}})
     }
 
     /**
@@ -148,8 +145,8 @@ class BusinessRulesAPICaller {
      *
      * @param businessRuleID
      */
-    redeployBusinessRule(businessRuleID){
-        return this.getHTTPClient().post('/instances/'+businessRuleID);
+    redeployBusinessRule(businessRuleID) {
+        return this.getHTTPClient().post('/instances/' + businessRuleID);
     }
 }
 

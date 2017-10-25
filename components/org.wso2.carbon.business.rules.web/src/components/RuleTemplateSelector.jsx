@@ -17,22 +17,18 @@
  */
 
 import React from 'react';
-
 // Material UI Components
 import Typography from 'material-ui/Typography';
 import {FormControl, FormHelperText} from 'material-ui/Form';
 import Input, {InputLabel} from 'material-ui/Input';
 import {MenuItem} from 'material-ui/Menu';
 import Select from 'material-ui/Select';
-
 // App Components
 import Header from "./Header";
 import BusinessRuleFromTemplateForm from "./BusinessRuleFromTemplateForm";
-
 // App Utilities
 import BusinessRulesUtilityFunctions from "../utils/BusinessRulesUtilityFunctions";
 import BusinessRulesConstants from "../utils/BusinessRulesConstants";
-
 // CSS
 import '../index.css';
 
@@ -41,23 +37,6 @@ import '../index.css';
  * which will then display the form with Rule Template's properties
  */
 class RuleTemplateSelector extends React.Component {
-    /**
-     * Updates selected Rule Template in the state,
-     * when Rule Template is selected from the list
-     * @param name
-     */
-    handleRuleTemplateSelected(templateGroupUUID,event){
-        let state = this.state
-        let self = this
-        // Get selected rule template & update in the state
-        let selectedRuleTemplatePromise = BusinessRulesUtilityFunctions.getRuleTemplate(templateGroupUUID, event.target.value)
-        selectedRuleTemplatePromise.then(function(selectedRuleTemplateResponse){
-            state['selectedRuleTemplate'] = selectedRuleTemplateResponse.data
-            self.setState(state)
-        })
-        // state['selectedRuleTemplate'] = BusinessRulesUtilityFunctions.getRuleTemplate(templateGroupUUID, event.target.value)
-    }
-
     constructor(props) {
         super(props);
         this.state = {
@@ -65,6 +44,23 @@ class RuleTemplateSelector extends React.Component {
             ruleTemplates: props.ruleTemplates,
             selectedRuleTemplate: {name: '', uuid: ''}, // Initialize with no Rule Template selected
         }
+    }
+
+    /**
+     * Updates selected Rule Template in the state,
+     * when Rule Template is selected from the list
+     * @param name
+     */
+    handleRuleTemplateSelected(templateGroupUUID, event) {
+        let state = this.state
+        let self = this
+        // Get selected rule template & update in the state
+        let selectedRuleTemplatePromise = BusinessRulesUtilityFunctions.getRuleTemplate(templateGroupUUID, event.target.value)
+        selectedRuleTemplatePromise.then(function (selectedRuleTemplateResponse) {
+            state['selectedRuleTemplate'] = selectedRuleTemplateResponse.data
+            self.setState(state)
+        })
+        // state['selectedRuleTemplate'] = BusinessRulesUtilityFunctions.getRuleTemplate(templateGroupUUID, event.target.value)
     }
 
     /**
@@ -121,7 +117,7 @@ class RuleTemplateSelector extends React.Component {
                     <InputLabel htmlFor="ruleTemplate">RuleTemplate</InputLabel>
                     <Select
                         value={this.state.selectedRuleTemplate.uuid}
-                        onChange={(e)=>this.handleRuleTemplateSelected(this.state.selectedTemplateGroup.uuid,e)}
+                        onChange={(e) => this.handleRuleTemplateSelected(this.state.selectedTemplateGroup.uuid, e)}
                         input={<Input id="ruleTemplate"/>}
                     >
                         {ruleTemplatesToDisplay}

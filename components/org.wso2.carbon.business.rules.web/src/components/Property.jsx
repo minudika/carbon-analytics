@@ -17,14 +17,12 @@
  */
 
 import React from 'react';
-
 // Material UI Components
 import TextField from 'material-ui/TextField';
 import {FormControl, FormHelperText} from 'material-ui/Form';
 import Input, {InputLabel} from 'material-ui/Input';
 import {MenuItem} from 'material-ui/Menu';
 import Select from 'material-ui/Select';
-
 // CSS
 import '../index.css';
 
@@ -33,7 +31,7 @@ class Property extends React.Component {
      * Handles onChange action of a TextField or a Select
      * @param name
      */
-    handleOnChange(event){
+    handleOnChange(event) {
         this.props.onValueChange(event.target.value)
     }
 
@@ -47,14 +45,14 @@ class Property extends React.Component {
                 <div>
                     <br/>
                     <FormControl
-                        fullWidth = {(this.props.fullWidth)?(this.props.fullWidth): false}
-                        error={(this.props.errorState)?(this.props.errorState):false}
-                        disabled={(this.props.disabledState)?(this.props.disabledState):false}
+                        fullWidth={(this.props.fullWidth) ? (this.props.fullWidth) : false}
+                        error={(this.props.errorState) ? (this.props.errorState) : false}
+                        disabled={(this.props.disabledState) ? (this.props.disabledState) : false}
                     >
                         <InputLabel htmlFor={this.props.name}>{this.props.fieldName}</InputLabel>
                         <Select
                             value={this.props.value}
-                            onChange={(e)=>this.handleOnChange(e)}
+                            onChange={(e) => this.handleOnChange(e)}
                             input={<Input id={this.props.name}/>}
                         >
                             {options}
@@ -68,17 +66,17 @@ class Property extends React.Component {
             return (
                 <div>
                     <TextField
-                        fullWidth = {(this.props.fullWidth)?(this.props.fullWidth): false}
+                        fullWidth={(this.props.fullWidth) ? (this.props.fullWidth) : false}
                         required
-                        error={(this.props.errorState)?(this.props.errorState):false}
-                        disabled={(this.props.disabledState)?(this.props.disabledState):false}
+                        error={(this.props.errorState) ? (this.props.errorState) : false}
+                        disabled={(this.props.disabledState) ? (this.props.disabledState) : false}
                         id={this.props.name}
                         name={this.props.name}
                         label={this.props.fieldName}
                         value={this.props.value}
                         helperText={this.props.description}
                         margin="normal"
-                        onChange={(e)=>this.handleOnChange(e)}
+                        onChange={(e) => this.handleOnChange(e)}
                     />
                     <br/>
                 </div>

@@ -17,19 +17,14 @@
  */
 
 import React from 'react';
-
 // Material UI Components
 import Typography from 'material-ui/Typography';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 
 import Logo from '../images/wso2-logo.svg';
-
 // CSS
 import '../index.css';
-
-
-
 
 /**
  * Represents a Create Button used in the Business Rule Manager

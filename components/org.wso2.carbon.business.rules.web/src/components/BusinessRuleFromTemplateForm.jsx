@@ -18,7 +18,6 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-
 // Material UI Components
 import Button from 'material-ui/Button';
 import TextField from 'material-ui/TextField';
@@ -30,18 +29,15 @@ import Input, {InputLabel} from 'material-ui/Input';
 import Paper from 'material-ui/Paper';
 import Grid from 'material-ui/Grid';
 import {MenuItem} from 'material-ui/Menu';
-
 // App Components
 import Property from './Property';
 import Header from "./Header";
 import ProgressDisplay from "./ProgressDisplay";
-
 // App Utilities
 import BusinessRulesUtilityFunctions from "../utils/BusinessRulesUtilityFunctions";
 import BusinessRulesConstants from "../utils/BusinessRulesConstants";
 import BusinessRulesAPICaller from "../utils/BusinessRulesAPICaller";
 import BusinessRulesMessages from "../utils/BusinessRulesMessages";
-
 // CSS
 import '../index.css';
 
@@ -125,7 +121,7 @@ class BusinessRuleFromTemplateForm extends React.Component {
 
             // Set properties in the state as default value
             for (let propertyKey in state.selectedRuleTemplate.properties) {
-                if(state.selectedRuleTemplate.properties.hasOwnProperty(propertyKey)){ //todo: might go wrong
+                if (state.selectedRuleTemplate.properties.hasOwnProperty(propertyKey)) { //todo: might go wrong
                     state['businessRuleProperties'][propertyKey] =
                         that.state.selectedRuleTemplate.properties[propertyKey.toString()]['defaultValue']
                 }

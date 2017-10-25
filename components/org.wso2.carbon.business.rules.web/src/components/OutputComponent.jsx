@@ -17,10 +17,7 @@
  */
 
 import React from 'react';
-
 // Material UI Components
-import Button from 'material-ui/Button';
-import TextField from 'material-ui/TextField';
 import Collapse from 'material-ui/transitions/Collapse';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
@@ -29,26 +26,14 @@ import {FormControl, FormHelperText} from 'material-ui/Form';
 import Input, {InputLabel} from 'material-ui/Input';
 import Select from 'material-ui/Select';
 import {MenuItem} from 'material-ui/Menu';
-import Grid from 'material-ui/Grid';
 import Table, {TableBody, TableCell, TableHead, TableRow} from 'material-ui/Table';
-import AddIcon from "material-ui-icons/Add"
 import {IconButton} from "material-ui";
 import Paper from 'material-ui/Paper';
-import List, {ListItem, ListItemText} from 'material-ui/List';
 import Typography from 'material-ui/Typography';
-
-// App Components
-import Property from './Property';
-import FilterRule from "./FilterRule";
-import Header from "./Header";
-import BusinessRuleFromScratchForm from "./BusinessRuleFromScratchForm";
-
 // App Utilities
 import BusinessRulesUtilityFunctions from "../utils/BusinessRulesUtilityFunctions";
 import BusinessRulesConstants from "../utils/BusinessRulesConstants";
-import BusinessRulesAPICaller from "../utils/BusinessRulesAPICaller";
 import BusinessRulesMessages from "../utils/BusinessRulesMessages";
-
 // CSS
 import '../index.css';
 

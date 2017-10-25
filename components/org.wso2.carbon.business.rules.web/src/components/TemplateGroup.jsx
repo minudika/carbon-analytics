@@ -17,15 +17,11 @@
  */
 
 import React from 'react';
-
 // Material UI Components
 import Typography from 'material-ui/Typography';
-import Card, {CardActions, CardContent} from 'material-ui/Card';
-import Cake from 'material-ui-icons/Cake';
-import NoteAdd from 'material-ui-icons/ArrowForward'
+import Card, {CardContent} from 'material-ui/Card';
 import Avatar from 'material-ui/Avatar';
 import IconButton from 'material-ui/IconButton';
-
 // CSS
 import '../index.css';
 

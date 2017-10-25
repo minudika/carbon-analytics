@@ -22,11 +22,6 @@ import ReactDOM from 'react-dom';
 // Material-UI
 import TemplateGroupSelector from "../components/TemplateGroupSelector";
 import BusinessRulesConstants from "./BusinessRulesConstants";
-import RuleTemplateSelector from "../components/RuleTemplateSelector";
-import BusinessRuleEditor from "../components/BusinessRuleEditor";
-import BusinessRuleFromScratchCreator from "../components/BusinessRuleFromScratchCreator";
-import {Typography} from "material-ui";
-import { CircularProgress } from 'material-ui/Progress';
 import BusinessRuleCreator from "../components/BusinessRuleCreator";
 import BusinessRulesAPICaller from "./BusinessRulesAPICaller";
 import BusinessRuleFromTemplateForm from "../components/BusinessRuleFromTemplateForm";
@@ -35,16 +30,15 @@ import BusinessRulesMessages from "./BusinessRulesMessages";
 import BusinessRulesManager from "../components/BusinessRulesManager";
 import ProgressDisplay from "../components/ProgressDisplay";
 
-
 class BusinessRulesUtilityFunctions {
     /**
      * Loads the form, that represents an existing form for viewing. Editable mode as specified
      * @param editable
      * @param businessRuleUUID
      */
-    static viewBusinessRuleForm(editable,businessRuleUUID){
+    static viewBusinessRuleForm(editable, businessRuleUUID) {
         let businessRulePromise = this.getBusinessRule(businessRuleUUID)
-        businessRulePromise.then(function(businessRuleResponse){
+        businessRulePromise.then(function (businessRuleResponse) {
             let gotBusinessRule = businessRuleResponse.data
 
             // Get the template group
@@ -54,15 +48,15 @@ class BusinessRulesUtilityFunctions {
 
                 // Get rule templates
                 let ruleTemplatesPromise = BusinessRulesUtilityFunctions.getRuleTemplates(templateGroup.uuid)
-                ruleTemplatesPromise.then(function(ruleTemplatesResponse){
+                ruleTemplatesPromise.then(function (ruleTemplatesResponse) {
                     // Filter rule template types
                     let templateRuleTemplates = []
                     let inputRuleTemplates = []
                     let outputRuleTemplates = []
-                    for(let ruleTemplate of ruleTemplatesResponse.data){
-                        if(ruleTemplate.type === BusinessRulesConstants.RULE_TEMPLATE_TYPE_TEMPLATE){
+                    for (let ruleTemplate of ruleTemplatesResponse.data) {
+                        if (ruleTemplate.type === BusinessRulesConstants.RULE_TEMPLATE_TYPE_TEMPLATE) {
                             templateRuleTemplates.push(ruleTemplate)
-                        }else if(ruleTemplate.type === BusinessRulesConstants.RULE_TEMPLATE_TYPE_INPUT){
+                        } else if (ruleTemplate.type === BusinessRulesConstants.RULE_TEMPLATE_TYPE_INPUT) {
                             inputRuleTemplates.push(ruleTemplate)
                         } else {
                             outputRuleTemplates.push(ruleTemplate)
@@ -77,13 +71,13 @@ class BusinessRulesUtilityFunctions {
                             gotBusinessRule.ruleTemplateUUID
                         )
 
-                        ruleTemplatePromise.then(function(ruleTemplateResponse){
+                        ruleTemplatePromise.then(function (ruleTemplateResponse) {
                             // Render the form
-                            ReactDOM.render (
+                            ReactDOM.render(
                                 <BusinessRuleFromTemplateForm
                                     businessRuleType={BusinessRulesConstants.BUSINESS_RULE_TYPE_TEMPLATE}
                                     formMode={
-                                        (editable)?(BusinessRulesConstants.BUSINESS_RULE_FORM_MODE_EDIT):
+                                        (editable) ? (BusinessRulesConstants.BUSINESS_RULE_FORM_MODE_EDIT) :
                                             (BusinessRulesConstants.BUSINESS_RULE_FORM_MODE_VIEW)
                                     }
                                     businessRuleName={gotBusinessRule.name}
@@ -104,7 +98,7 @@ class BusinessRulesUtilityFunctions {
                             gotBusinessRule.templateGroupUUID,
                             gotBusinessRule.inputRuleTemplateUUID
                         )
-                        inputRuleTemplatePromise.then(function(inputRuleTemplateResponse){
+                        inputRuleTemplatePromise.then(function (inputRuleTemplateResponse) {
                             let inputRuleTemplate = inputRuleTemplateResponse.data
 
                             // Get output rule template, from which the business rule has been created
@@ -112,15 +106,15 @@ class BusinessRulesUtilityFunctions {
                                 gotBusinessRule.templateGroupUUID,
                                 gotBusinessRule.outputRuleTemplateUUID
                             )
-                            outputRuleTemplatePromise.then(function(outputRuleTemplateResponse){
+                            outputRuleTemplatePromise.then(function (outputRuleTemplateResponse) {
                                 let outputRuleTemplate = outputRuleTemplateResponse.data
 
                                 // Render the form
-                                ReactDOM.render (
+                                ReactDOM.render(
                                     <BusinessRuleFromScratchForm
                                         businessRuleType={BusinessRulesConstants.BUSINESS_RULE_TYPE_SCRATCH}
                                         formMode={
-                                            (editable)?(BusinessRulesConstants.BUSINESS_RULE_FORM_MODE_EDIT):
+                                            (editable) ? (BusinessRulesConstants.BUSINESS_RULE_FORM_MODE_EDIT) :
                                                 (BusinessRulesConstants.BUSINESS_RULE_FORM_MODE_VIEW)
                                         }
                                         businessRuleName={gotBusinessRule.name}
@@ -166,12 +160,12 @@ class BusinessRulesUtilityFunctions {
                     templateGroups={templateGroupsResponse.data}
                     mode={mode}
                 />, document.getElementById('root'))
-        }).catch(function(error){
+        }).catch(function (error) {
             console.error('Failed to load template groups.')
             ReactDOM.render(<ProgressDisplay error={BusinessRulesMessages.API_FAILURE_ERROR}/>,
                 document.getElementById('root'))
         })
-        ReactDOM.render(<ProgressDisplay/>,document.getElementById('root'))
+        ReactDOM.render(<ProgressDisplay/>, document.getElementById('root'))
     }
 
     /**
@@ -183,11 +177,11 @@ class BusinessRulesUtilityFunctions {
     static loadBusinessRuleFromScratchCreator(templateGroupUUID) {
         let that = this
         let templateGroupPromise = this.getTemplateGroup(templateGroupUUID)
-        templateGroupPromise.then(function(templateGroupResponse){
+        templateGroupPromise.then(function (templateGroupResponse) {
             // Load template group
             let templateGroup = templateGroupResponse.data
             let ruleTemplatesPromise = that.getRuleTemplates(templateGroupUUID)
-            ruleTemplatesPromise.then(function(ruleTemplatesResponse){
+            ruleTemplatesPromise.then(function (ruleTemplatesResponse) {
                 let inputRuleTemplates = []
                 let outputRuleTemplates = []
 
@@ -215,17 +209,17 @@ class BusinessRulesUtilityFunctions {
      *
      * @param snackbarMessage
      */
-    static loadBusinessRulesManager(snackbarMessage){
+    static loadBusinessRulesManager(snackbarMessage) {
         // Load available Business Rules
         let businessRulesPromise = BusinessRulesUtilityFunctions.getBusinessRules()
-        businessRulesPromise.then(function(response){
+        businessRulesPromise.then(function (response) {
             ReactDOM.render(
                 <BusinessRulesManager
                     businessRules={response.data}
                     displaySnackBar={!!(snackbarMessage)}
-                    snackbarMessage={(snackbarMessage)?(snackbarMessage):('')}
+                    snackbarMessage={(snackbarMessage) ? (snackbarMessage) : ('')}
                 />, document.getElementById("root"))
-        }).catch(function(error){
+        }).catch(function (error) {
             console.error('Failed to load business rules.')
             ReactDOM.render(<ProgressDisplay error={BusinessRulesMessages.CONNECTION_FAILURE_ERROR}/>,
                 document.getElementById("root"))
@@ -240,13 +234,13 @@ class BusinessRulesUtilityFunctions {
     static loadBusinessRulesFromTemplateCreator(templateGroupUUID) {
         // Get the template group
         let templateGroupPromise = this.getTemplateGroup(templateGroupUUID)
-        templateGroupPromise.then(function(templateGroupResponse){
+        templateGroupPromise.then(function (templateGroupResponse) {
             let ruleTemplatesPromise = BusinessRulesUtilityFunctions.getRuleTemplates(templateGroupUUID)
-            ruleTemplatesPromise.then(function(ruleTemplatesResponse){
+            ruleTemplatesPromise.then(function (ruleTemplatesResponse) {
                 // Filter and get the rule templates, only of type 'template'
                 let templateRuleTemplates = []
-                for(let ruleTemplate of ruleTemplatesResponse.data){
-                    if(ruleTemplate.type === BusinessRulesConstants.RULE_TEMPLATE_TYPE_TEMPLATE){
+                for (let ruleTemplate of ruleTemplatesResponse.data) {
+                    if (ruleTemplate.type === BusinessRulesConstants.RULE_TEMPLATE_TYPE_TEMPLATE) {
                         templateRuleTemplates.push(ruleTemplate)
                     }
                 }
@@ -259,12 +253,12 @@ class BusinessRulesUtilityFunctions {
                     />,
                     document.getElementById('root')
                 )
-            }).catch(function(error){
+            }).catch(function (error) {
                 console.error("Failed to load rule templates from template group '" + templateGroupUUID + "'.")
                 ReactDOM.render(<ProgressDisplay error={BusinessRulesMessages.API_FAILURE_ERROR}/>,
                     document.getElementById('root'))
             })
-        }).catch(function(error){
+        }).catch(function (error) {
             console.error("Failed to load template group '" + templateGroupUUID + "'.")
             ReactDOM.render(<ProgressDisplay error={BusinessRulesMessages.API_FAILURE_ERROR}/>,
                 document.getElementById('root'))
@@ -286,94 +280,46 @@ class BusinessRulesUtilityFunctions {
         return gotTemplateGroupsPromise;
     }
 
-    /** [2]
+    /**
      * Returns promise for available Rule Templates, belong to the given Template Group
-     * todo: from API
      *
-     * @param templateGroupName
+     * @param templateGroupUUID
+     * @returns {*}
      */
     static getRuleTemplates(templateGroupUUID) {
         let apis = new BusinessRulesAPICaller(BusinessRulesConstants.BASE_URL)
-        let gotRuleTemplates = apis.getRuleTemplates(templateGroupUUID)
-        return gotRuleTemplates
+        return apis.getRuleTemplates(templateGroupUUID)
     }
 
-    /** [3]
-     * Get available Properties, belong to the given Template Group and Rule Template
-     * todo: from API
-     *
-     * @param templateGroupName
-     * @param ruleTemplateName
-     * @returns {*|Array}
-     */
-    static getRuleTemplateProperties(templateGroupName, ruleTemplateName) {
-        // todo: remove hardcode ******************************
-        var ruleTemplates
-        for (let templateGroup of this.availableTemplateGroups) {
-            if (templateGroup.name === templateGroupName) {
-                ruleTemplates = templateGroup.ruleTemplates
-                break
-            }
-        }
-        for (let ruleTemplate of ruleTemplates) {
-            if (ruleTemplate.name === ruleTemplateName) {
-                return ruleTemplate.properties
-            }
-        }
-        // todo: **********************************************
-        // todo: Return Properties from API
-    }
-
-    /** [5]
+    /**
      * Returns promise for BusinessRulesCreator
-     * todo: from API
      *
-     * @returns {[null,null]}
+     * @returns {*}
      */
     static getBusinessRules() {
         let apis = new BusinessRulesAPICaller(BusinessRulesConstants.BASE_URL);
         let gotBusinessRules = apis.getBusinessRules();
 
         return gotBusinessRules;
-
-        // todo: remove hardcode *****************************
-        // todo: *********************************************
-        // todo: Get BusinessRulesCreator from API ******************
     }
 
-// End of Functions that have API calls unnecessarily //////////////////////////
-
-    /* End of Methods related to API calls ****************************************/
-
-    /** [6]
+    /**
      * Gets the BusinessRule with the given UUID
-     * todo: from API
      *
      * @param businessRuleUUID
-     * @returns {null|null}
+     * @returns {*}
      */
     static getBusinessRule(businessRuleUUID) {
         let apis = new BusinessRulesAPICaller(BusinessRulesConstants.BASE_URL)
         let gotBusinessRule = apis.getBusinessRule(businessRuleUUID)
 
         return gotBusinessRule
-        // // todo: remove hardcode ******************************
-        // for (let businessRule of this.getBusinessRules()) {
-        //     if (businessRuleUUID === businessRule.uuid) {
-        //         return businessRule
-        //     }
-        // }
-        // // todo: *********************************************
-        // // todo: Get BusinessRule from API *******************
-
     }
 
-// Functions that have API calls unnecessarily /////////////////////////////////
     /**
      * Returns promise of the found Template Group with the given name
-     * todo: from API (We have available templateGroups in front end itself)
      *
-     * @param templateGroupName
+     * @param templateGroupUUID
      * @returns {*}
      */
     static getTemplateGroup(templateGroupUUID) {
@@ -385,11 +331,9 @@ class BusinessRulesUtilityFunctions {
 
     /**
      * Returns promise of the Rule Template with the given name, that belongs to the given Template Group name
-     * todo: from API (We have available templateGroups in front end itself)
-     * todo: make sure to assign the belonging templateGroup for ruleTemplate
      *
-     * @param templateGroupName
-     * @param ruleTemplateName
+     * @param templateGroupUUID
+     * @param ruleTemplateUUID
      * @returns {*}
      */
     static getRuleTemplate(templateGroupUUID, ruleTemplateUUID) {
@@ -398,26 +342,6 @@ class BusinessRulesUtilityFunctions {
 
         return gotRuleTemplate;
     }
-
-    /**
-     * TODO : Implement
-     * Gets the deployment status of a given Business Rule
-     *
-     * @param businessRuleUUID
-     */
-    static getBusinessRuleDeploymentStatus(businessRuleUUID) {
-        // Generates a random status for now
-        let statuses = [
-            BusinessRulesConstants.BUSINESS_RULE_DEPLOYMENT_STATUS_DEPLOYED,
-            BusinessRulesConstants.BUSINESS_RULE_DEPLOYMENT_STATUS_NOT_DEPLOYED
-        ]
-
-        return statuses[Math.floor(Math.random() * statuses.length)]
-    }
-
-    /* Roughly implemented functions *//////////////////////////////////////////////////////////////////////////////////////
-
-    /* End of Roughly implemented functions *///////////////////////////////////////////////////////////////////////////////
 
     /**
      * Generates UUID for a given Business Rule name
@@ -436,8 +360,8 @@ class BusinessRulesUtilityFunctions {
      * @returns {boolean}
      */
     static isEmpty(object) {
-        for(var key in object) {
-            if(object.hasOwnProperty(key))
+        for (var key in object) {
+            if (object.hasOwnProperty(key))
                 return false;
         }
         return true;

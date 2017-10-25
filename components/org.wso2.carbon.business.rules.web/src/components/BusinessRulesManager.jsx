@@ -17,35 +17,25 @@
  */
 
 import React from 'react';
-
 // Material UI Components
 import Typography from 'material-ui/Typography';
 import Table, {TableBody, TableCell, TableHead, TableRow,} from 'material-ui/Table';
 import Button from "material-ui/Button";
 import AddIcon from "material-ui-icons/Add";
-import Dialog, {
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
-} from 'material-ui/Dialog';
+import Dialog, {DialogActions, DialogContent, DialogContentText, DialogTitle,} from 'material-ui/Dialog';
 import Paper from 'material-ui/Paper';
 import Snackbar from 'material-ui/Snackbar';
 import Slide from 'material-ui/transitions/Slide';
 import Switch from 'material-ui/Switch';
-import { FormControlLabel, FormGroup } from 'material-ui/Form';
-
+import {FormControlLabel} from 'material-ui/Form';
 // App Components
 import Header from "./Header";
 import BusinessRule from "./BusinessRule";
-
-
 // App Utilities
 import BusinessRulesUtilityFunctions from "../utils/BusinessRulesUtilityFunctions";
 import BusinessRulesMessages from "../utils/BusinessRulesMessages";
 import BusinessRulesConstants from "../utils/BusinessRulesConstants";
 import BusinessRulesAPICaller from "../utils/BusinessRulesAPICaller";
-
 // CSS
 import '../index.css';
 
@@ -182,12 +172,12 @@ class BusinessRulesManager extends React.Component {
      * @param businessRuleUUID
      * @param forceDeleteStatus
      */
-    deleteBusinessRule(businessRuleUUID, forceDeleteStatus){
+    deleteBusinessRule(businessRuleUUID, forceDeleteStatus) {
         this.setState({displayDialog: false})
         let apis = new BusinessRulesAPICaller(BusinessRulesConstants.BASE_URL)
-        let deletePromise = apis.deleteBusinessRule(this.state.uuid, forceDeleteStatus).then(function(deleteResponse){
+        let deletePromise = apis.deleteBusinessRule(this.state.uuid, forceDeleteStatus).then(function (deleteResponse) {
             BusinessRulesUtilityFunctions.loadBusinessRulesManager(deleteResponse.data[2])
-        }).catch(function(error){
+        }).catch(function (error) {
             console.error("Failed to delete business rule '" + businessRuleUUID + "'.")
             BusinessRulesUtilityFunctions.loadBusinessRulesManager("Failed to delete business rule '" + businessRuleUUID + "'.")
         })
@@ -196,14 +186,14 @@ class BusinessRulesManager extends React.Component {
     /**
      * Closes the snackbar
      */
-    handleRequestClose(){
-        this.setState({ displaySnackBar: false });
+    handleRequestClose() {
+        this.setState({displaySnackBar: false});
     };
 
     /**
      * Opens the delete confirmation dialog, after updating the state with business rule's UUID, that is to be deleted
      */
-    handleDeleteDialogOpen(businessRuleUUID){
+    handleDeleteDialogOpen(businessRuleUUID) {
         let state = this.state
         state['businessRuleUUIDToBeDeleted'] = businessRuleUUID;
         state['displayDeleteDialog'] = true;
@@ -231,7 +221,7 @@ class BusinessRulesManager extends React.Component {
                         control={
                             <Switch
                                 checked={this.state.forceDeleteBusinessRule}
-                                onChange={(event, checked) => this.setState({forceDeleteBusinessRule:checked})}
+                                onChange={(event, checked) => this.setState({forceDeleteBusinessRule: checked})}
                                 style={styles.check}
                             />
                         }
@@ -261,7 +251,7 @@ class BusinessRulesManager extends React.Component {
     /**
      * Closes the dialog
      */
-    dismissDialog(){
+    dismissDialog() {
         this.setState({displayDeleteDialog: false})
     }
 
@@ -270,8 +260,8 @@ class BusinessRulesManager extends React.Component {
         let snackBar =
             <Snackbar
                 open={this.state.displaySnackBar}
-                onRequestClose={(e)=>this.handleRequestClose()}
-                transition={<Slide direction={styles.snackbar.direction} />}
+                onRequestClose={(e) => this.handleRequestClose()}
+                transition={<Slide direction={styles.snackbar.direction}/>}
                 SnackbarContentProps={{
                     'aria-describedby': 'snackbarMessage',
                 }}
@@ -293,10 +283,10 @@ class BusinessRulesManager extends React.Component {
                     <br/>
                     <div>
                         {
-                            (this.state.businessRules.length > 0)?
+                            (this.state.businessRules.length > 0) ?
                                 (<Typography type="headline">
                                     Business Rules
-                                </Typography>):
+                                </Typography>) :
                                 (<div></div>)
                         }
                     </div>

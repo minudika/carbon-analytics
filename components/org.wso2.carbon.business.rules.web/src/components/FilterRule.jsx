@@ -17,22 +17,15 @@
  */
 
 import React from 'react';
-
 // Material UI Components
 import {TableCell, TableRow} from 'material-ui/Table';
 import IconButton from 'material-ui/IconButton';
 import ClearIcon from 'material-ui-icons/Clear';
 import {Typography} from "material-ui";
-import TextField from 'material-ui/TextField';
-import { MenuItem } from 'material-ui/Menu';
-import Paper from 'material-ui/Paper';
-
 // App Components
 import Property from "./Property";
-
 // App Utilities
 import BusinessRulesConstants from "../utils/BusinessRulesConstants";
-
 // CSS
 import '../index.css';
 
@@ -79,7 +72,7 @@ class FilterRule extends React.Component {
      * @param filterRule
      * @returns {*}
      */
-    deriveElementsFromFilterRule(filterRule){
+    deriveElementsFromFilterRule(filterRule) {
         let initialSplitArray = filterRule.split(" ")
         let newSplitArray = []
 
@@ -102,9 +95,11 @@ class FilterRule extends React.Component {
     onAttributeChange(value) {
         this.props.onAttributeChange(this.props.filterRuleIndex, value)
     }
+
     onOperatorChange(value) {
         this.props.onOperatorChange(this.props.filterRuleIndex, value)
     }
+
     onAttributeOrValueChange(value) {
         this.props.onAttributeOrValueChange(this.props.filterRuleIndex, value)
     }
@@ -114,7 +109,7 @@ class FilterRule extends React.Component {
      *
      * @param index : Index of the rule template, comes from prop
      */
-    handleRemoveFilterRuleButtonClick(index){
+    handleRemoveFilterRuleButtonClick(index) {
         this.props.handleRemoveFilterRule(index)
     }
 
@@ -126,7 +121,7 @@ class FilterRule extends React.Component {
         if (this.props.exposedInputStreamFields && (this.props.exposedInputStreamFields != null)) {
             // To store options to display
             let fieldNameOptions = []
-            for(let fieldName in this.props.exposedInputStreamFields){
+            for (let fieldName in this.props.exposedInputStreamFields) {
                 fieldNameOptions.push(fieldName.toString())
             }
             filterRuleAttributeToDisplay =
@@ -153,14 +148,14 @@ class FilterRule extends React.Component {
 
         let deleteButton
         // Display only in 'create' or 'edit' modes
-        if(this.props.mode !== BusinessRulesConstants.BUSINESS_RULE_FORM_MODE_VIEW){
+        if (this.props.mode !== BusinessRulesConstants.BUSINESS_RULE_FORM_MODE_VIEW) {
             deleteButton =
                 <TableCell>
-                <IconButton color="primary" style={styles.deployButton} aria-label="Remove"
-                            onClick={(e)=>this.handleRemoveFilterRuleButtonClick()}>
-                    <ClearIcon/>
-                </IconButton>
-            </TableCell>
+                    <IconButton color="primary" style={styles.deployButton} aria-label="Remove"
+                                onClick={(e) => this.handleRemoveFilterRuleButtonClick()}>
+                        <ClearIcon/>
+                    </IconButton>
+                </TableCell>
         }
 
         return (
