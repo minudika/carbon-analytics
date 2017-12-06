@@ -42,6 +42,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 /**
@@ -553,5 +554,90 @@ public class SiddhiEditorTestCase {
         Assert.assertEquals(httpResponseMessage.getContentType(), "application/json");
     }
 
-    //TODO : tests for {siddhiApp}/..
+    @Test
+    public void testListingSiddhiApps() throws Exception {
+        String path = "/editor/artifact/listSiddhiApps";
+        String contentType = "text/plain";
+        String method = "GET";
+
+        logger.info("Listing siddhi apps.");
+        HTTPResponseMessage httpResponseMessage = TestUtil.sendHRequest("", baseURI, path, contentType, method,
+                true, DEFAULT_USER_NAME, DEFAULT_PASSWORD);
+
+        JsonArray siddhiApps = new Gson().fromJson(httpResponseMessage.getSuccessContent().toString(), JsonArray.class);
+        String siddhiAppName = siddhiApps.get(0).getAsJsonObject().get("siddhiAppName").getAsString();
+        Assert.assertEquals(httpResponseMessage.getResponseCode(), 200);
+        Assert.assertEquals(httpResponseMessage.getMessage(), "OK");
+        Assert.assertEquals(httpResponseMessage.getContentType(), "application/json");
+        Assert.assertEquals(siddhiApps.size(), 1);
+        Assert.assertEquals(siddhiAppName, "TestSiddhiApp");
+    }
+
+    @Test
+    public void testListingStreamsInASiddhiApp() throws Exception {
+        String path = "/editor/artifact/listStreams/TestSiddhiApp";
+        String contentType = "text/plain";
+        String method = "GET";
+
+        logger.info("Listing streams in a siddhi app.");
+        HTTPResponseMessage httpResponseMessage = TestUtil.sendHRequest("", baseURI, path, contentType, method,
+                true, DEFAULT_USER_NAME, DEFAULT_PASSWORD);
+        JsonArray streams = new Gson().fromJson(httpResponseMessage.getSuccessContent().toString(), JsonArray.class);
+        Assert.assertEquals(httpResponseMessage.getResponseCode(), 200);
+        Assert.assertEquals(httpResponseMessage.getMessage(), "OK");
+        Assert.assertEquals(httpResponseMessage.getContentType(), "application/json");
+        Assert.assertEquals(streams.size(), 2);
+        Assert.assertEquals(streams.get(0).getAsString(), "FooStream");
+        Assert.assertEquals(streams.get(1).getAsString(), "BarStream");
+    }
+
+    @Test
+    public void testSavingAndDeletingASiddhiApp() throws Exception {
+        String saveRequestPath = "/editor/workspace/write";
+        String contentType = "text/plain";
+        String saveMethod = "POST";
+        String config = "@App:name(\"SiddhiApp2\")\n" +
+                "define stream FooStream (symbol string, price float, volume long);\n" +
+                "@source(type='inMemory', topic='symbol', @map(type='passThrough'))" +
+                "define stream BarStream (symbol string, price float, volume long);\n" +
+                "from FooStream\n" +
+                "select symbol, price, volume\n" +
+                "insert into BarStream;\n";
+
+        String encodedConfig = Base64.getEncoder().encodeToString(config.getBytes());
+        String encodedConfigName = Base64.getEncoder().encodeToString("SiddhiApp2.siddhi".getBytes());
+        String tmp = String.format("location=%s&configName=%s&config=%s", "location", encodedConfigName, encodedConfig);
+
+        logger.info("Saving a siddhi application.");
+        HTTPResponseMessage httpResponseMessage = TestUtil.sendHRequest(tmp, baseURI, saveRequestPath, contentType,
+                saveMethod, true, DEFAULT_USER_NAME, DEFAULT_PASSWORD);
+        Assert.assertEquals(httpResponseMessage.getResponseCode(), 200);
+        Assert.assertEquals(httpResponseMessage.getMessage(), "OK");
+        Assert.assertEquals(httpResponseMessage.getContentType(), "application/json");
+
+        String deleteRequestPath = "/editor/workspace/delete?siddhiAppName=SiddhiApp2.siddhi";
+        String deleteMethod = "DELETE";
+
+        HTTPResponseMessage deleteHttpResponseMessage = TestUtil.sendHRequest("", baseURI, deleteRequestPath,
+                contentType, deleteMethod,
+                true, DEFAULT_USER_NAME, DEFAULT_PASSWORD);
+
+        Assert.assertEquals(deleteHttpResponseMessage.getResponseCode(), 200);
+        Assert.assertEquals(deleteHttpResponseMessage.getMessage(), "OK");
+        Assert.assertEquals(deleteHttpResponseMessage.getContentType(), "application/json");
+    }
+
+    @Test
+    public void testDeletingUnavailableSiddhiApp() throws Exception {
+        String deleteRequestPath = "/editor/workspace/delete?siddhiAppName=UnavailableSiddhiApp.siddhi";
+        String deleteMethod = "DELETE";
+        String contentType = "text/plain";
+
+        HTTPResponseMessage deleteHttpResponseMessage = TestUtil.sendHRequest("", baseURI, deleteRequestPath,
+                contentType, deleteMethod,
+                true, DEFAULT_USER_NAME, DEFAULT_PASSWORD);
+
+        Assert.assertEquals(deleteHttpResponseMessage.getResponseCode(), 500);
+        Assert.assertEquals(deleteHttpResponseMessage.getContentType(), "application/json");
+    }
 }
