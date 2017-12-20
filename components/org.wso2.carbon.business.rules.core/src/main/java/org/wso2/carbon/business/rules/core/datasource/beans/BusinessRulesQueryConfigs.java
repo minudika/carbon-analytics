@@ -37,6 +37,7 @@ public class BusinessRulesQueryConfigs {
     private String username;
     private String password;
     private ArrayList<HashMap<String, ArrayList<String>>> deployment_configs;
+    private HashMap<String, HashMap<String, String>> workerAccessCredentials;
     private HashMap<String, Object> roles;
 
     public BusinessRulesQueryConfigs() {
@@ -88,5 +89,13 @@ public class BusinessRulesQueryConfigs {
 
     public void setRoles(HashMap<String, Object> roles) {
         this.roles = roles;
+    }
+
+    public HashMap<String, HashMap<String, String>> getWorkerAccessCredentials() {
+        return workerAccessCredentials;
+    }
+
+    public void setWorkerAccessCredentials(HashMap<String, HashMap<String, String>> workerAccessCredentials) {
+        this.workerAccessCredentials = workerAccessCredentials;
     }
 }

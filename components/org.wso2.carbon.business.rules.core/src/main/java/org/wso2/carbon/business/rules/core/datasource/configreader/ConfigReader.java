@@ -37,6 +37,7 @@ public class ConfigReader {
     private static final String USER_NAME = "username";
     private static final String PASSWORD = "password";
     private static final String DEPLOYMENT_CONFIGS = "deployment_configs";
+    private static final String WORKER_ACCESS_CREDENTIALS = "workerAccessCredentials";
     private static final String COMPONENT_NAMESPACE = "wso2.business.rules.manager";
     private static final String ROLES = "roles";
     private static final String MANAGER = "manager";
@@ -90,6 +91,13 @@ public class ConfigReader {
     public Map getNodes() {
         if (configs != null && configs.get(DEPLOYMENT_CONFIGS) != null) {
             return (Map) ((List) configs.get(DEPLOYMENT_CONFIGS)).get(0);
+        }
+        return null;
+    }
+
+    public Map getWorkerAuthInfo() {
+        if (configs != null && configs.get(WORKER_ACCESS_CREDENTIALS) != null) {
+            return (Map) configs.get(WORKER_ACCESS_CREDENTIALS);
         }
         return null;
     }

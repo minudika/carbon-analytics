@@ -25,6 +25,7 @@ import org.wso2.carbon.business.rules.core.exceptions.SiddhiAppsApiHelperExcepti
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.Map;
 
 import okhttp3.Response;
 
@@ -33,18 +34,22 @@ import okhttp3.Response;
  */
 public class SiddhiAppApiHelper implements SiddhiAppApiHelperService {
     private static final String SERVICE_ENDPOINT = "http://%s/siddhi-apps/%s/%s";
+    private static final String USERNAME = "username";
+    private static final String PASSWORD = "password";
     private ConfigReader configReader;
-    private String username;
-    private String password;
+    private Map workerAuthInfo = null;
+
     public SiddhiAppApiHelper() {
         configReader = new ConfigReader();
-        username = configReader.getUserName();
-        password = configReader.getPassword();
+        workerAuthInfo = configReader.getWorkerAuthInfo();
     }
     @Override
     public boolean deploySiddhiApp(String nodeUrl, String siddhiApp) throws SiddhiAppsApiHelperException {
         Response response = null;
         String url;
+        Map<String, String> credentials = getCredentials(nodeUrl);
+        String username  = credentials.get(USERNAME);
+        String password = credentials.get(PASSWORD);
         try {
             url = String.format(SERVICE_ENDPOINT, nodeUrl, "", "");
             response = HTTPClientUtil.doPostRequest(url, siddhiApp, username, password);
@@ -79,6 +84,9 @@ public class SiddhiAppApiHelper implements SiddhiAppApiHelperService {
     @Override
     public String getStatus(String nodeUrl, String siddhiAppName) throws SiddhiAppsApiHelperException {
         String url;
+        Map<String, String> credentials = getCredentials(nodeUrl);
+        String username  = credentials.get(USERNAME);
+        String password = credentials.get(PASSWORD);
         Response response = null;
         try {
             url = String.format(SERVICE_ENDPOINT, nodeUrl, siddhiAppName, SiddhiAppApiConstants.STATUS);
@@ -116,6 +124,9 @@ public class SiddhiAppApiHelper implements SiddhiAppApiHelperService {
     @Override
     public boolean delete(String nodeUrl, String siddhiAppName) throws SiddhiAppsApiHelperException {
         String url;
+        Map<String, String> credentials = getCredentials(nodeUrl);
+        String username  = credentials.get(USERNAME);
+        String password = credentials.get(PASSWORD);
         Response response = null;
         try {
             url = String.format(SERVICE_ENDPOINT, nodeUrl, siddhiAppName, "");
@@ -142,6 +153,9 @@ public class SiddhiAppApiHelper implements SiddhiAppApiHelperService {
     @Override
     public void update(String nodeUrl, String siddhiApp) throws SiddhiAppsApiHelperException {
         String url;
+        Map<String, String> credentials = getCredentials(nodeUrl);
+        String username  = credentials.get(USERNAME);
+        String password = credentials.get(PASSWORD);
         Response response = null;
         try {
             url = String.format(SERVICE_ENDPOINT, nodeUrl, "", "");
@@ -170,5 +184,20 @@ public class SiddhiAppApiHelper implements SiddhiAppApiHelperService {
         if (response != null) {
             response.close();
         }
+    }
+
+    private Map<String, String> getCredentials(String nodeURL) {
+        Map<String, String>credentials = (Map<String, String>) workerAuthInfo.get(nodeURL);
+        if (workerAuthInfo == null) {
+            credentials.put(USERNAME, "admin");
+            credentials.put(PASSWORD, "admin");
+        } else {
+            Map<String, String> workerCredentials = (Map) workerAuthInfo.get(nodeURL);
+            String username = workerCredentials.get(USERNAME);
+            String password = workerCredentials.get(PASSWORD);
+            credentials.put(USERNAME, username != null ? username : "admin");
+            credentials.put(PASSWORD, password != null ? password : "admin");
+        }
+        return credentials;
     }
 }
