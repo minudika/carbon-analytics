@@ -25,6 +25,7 @@ import org.wso2.carbon.business.rules.core.exceptions.SiddhiAppsApiHelperExcepti
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 import okhttp3.Response;
@@ -187,8 +188,9 @@ public class SiddhiAppApiHelper implements SiddhiAppApiHelperService {
     }
 
     private Map<String, String> getCredentials(String nodeURL) {
-        Map<String, String>credentials = (Map<String, String>) workerAuthInfo.get(nodeURL);
+        Map<String, String> credentials = new HashMap<>();
         if (workerAuthInfo == null) {
+            credentials = new HashMap<>();
             credentials.put(USERNAME, "admin");
             credentials.put(PASSWORD, "admin");
         } else {
